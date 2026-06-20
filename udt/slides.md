@@ -37,10 +37,12 @@ marius@galaxyproject.org
 
 ---
 
-## Slide 4: …so every tool is hand-curated
+## Slide 4: Curation is a strength — good tools make good workflows
 
 ![Slide 6](images/slide-06.png)
-*galaxyproject/tools-iuc — thousands of reviewed pull requests. Safe, but every tool goes through people. That doesn’t scale to “I need xyz, right now.”*
+*galaxyproject/tools-iuc: thousands of carefully reviewed tools — one of Galaxy’s greatest strengths. Trusted, reproducible tools are exactly what make trusted, reproducible workflows.*
+
+> **A high bar by design:** and not every need fits it — the one-off, the exploratory, the “I need xyz, right now.” That gap is what user-defined tools fill — *alongside* curation, not instead of it.
 
 ---
 
@@ -59,7 +61,7 @@ shell_command: Rscript plot.R     # the R script lives in a configfile
 outputs:
   - {name: plot, type: data, format: png, from_work_dir: boxplot.png}
 ```
-*A User-Defined Tool: typed inputs, a container, sandboxed JS expressions — no XML, no Python, no review queue. This boxplot tool is our running example.*
+*A User-Defined Tool: typed inputs, a container, sandboxed JS expressions — safe to build and run yourself in seconds, no XML and no arbitrary Python. For the personal and the exploratory; curated tools stay the backbone. (Our running example.)*
 
 ---
 
@@ -74,7 +76,7 @@ outputs:
 
 ## Slide 7: Why we built this — iterate against the real thing
 
-- The classic loop is slow: write XML, build a container, open a PR, wait for review — *before you even know the idea works*
+- Building a fully curated tool is thorough — write XML, build a container, open a PR, review — the right bar for a production tool, but a lot to go through just to find out *“is this even the tool I want?”*
 - User-defined tools turn that into a live loop, right where your data is:
   - **Is this even the tool I want?** — try it, look at the output, change it
   - **Get the first shot right** — a tight edit → run → inspect cycle

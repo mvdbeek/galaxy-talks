@@ -1,47 +1,74 @@
 /* Galaxy Tools 2.0 — slide deck styles
-   Edit freely: each slide is a <section class="slide slide--TYPE">. */
+   Palette & conventions aligned with galaxyproject/foundry global.css.
+   Each slide is a <section class="slide slide--TYPE">. */
+
+@import url('https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:ital,wght@0,400;0,700;1,400&display=swap');
 
 :root {
-  --bg: #0f1226;
+  /* Galaxy brand */
+  --galaxy-primary: #25537b;
+  --galaxy-dark: #2c3143;
+  --galaxy-dark-medium: #3c435c;
+  --galaxy-gold: #ffd700;
+  --galaxy-grey: #58585a;
+
+  /* Accent — slightly desaturated gold */
+  --accent: #25537b;          /* primary blue, for titles & links */
+  --gold: #e8c547;
+  --gold-hover: #f2d55a;
+
+  /* Surfaces & text */
+  --surface: #ffffff;
+  --surface-raised: #f6f8fa;
+  --surface-hover: #edf4fa;
+  --ink: #2c3143;
+  --muted: #58585a;
+  --border: #d1d5db;
+  --border-subtle: #e1e4e8;
+
+  --bg: #2c3143;
   --slide-bg: #ffffff;
-  --ink: #1b2030;
-  --muted: #5b6478;
-  --accent: #2563eb;
-  --accent-2: #7c3aed;
-  --maxw: 960px;
-  --radius: 16px;
+  --maxw: 980px;
+  --radius: 14px;
   --gap: 2.5rem;
+
+  --font-sans: 'Atkinson Hyperlegible', ui-sans-serif, system-ui, -apple-system, sans-serif;
+  --font-mono: Monaco, Menlo, Consolas, 'Courier New', monospace;
 }
 
 * { box-sizing: border-box; }
 
 body {
   margin: 0;
-  font-family: "Inter", system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  font-family: var(--font-sans);
   color: var(--ink);
-  background:
-    radial-gradient(1200px 600px at 20% -10%, #1b2150 0%, transparent 60%),
-    radial-gradient(1000px 500px at 100% 0%, #2a1747 0%, transparent 55%),
-    var(--bg);
   line-height: 1.55;
+  /* galaxy-dark base + subtle blueprint grid (foundry .bg-grid) */
+  background:
+    linear-gradient(to right, rgba(255,255,255,.03) 1px, transparent 1px) 0 0 / 24px 24px,
+    linear-gradient(to bottom, rgba(255,255,255,.03) 1px, transparent 1px) 0 0 / 24px 24px,
+    radial-gradient(1100px 560px at 15% -10%, #34507a 0%, transparent 60%),
+    var(--bg);
 }
+
+:focus-visible { outline: 2px solid var(--gold); outline-offset: 2px; border-radius: 2px; }
 
 /* ---- Deck header ---- */
 .deck-header {
   max-width: var(--maxw);
   margin: 0 auto;
   padding: 3rem 1.25rem 1.5rem;
-  color: #eef1ff;
+  color: #f8f9fa;
   text-align: center;
 }
 .deck-header h1 {
   font-size: clamp(1.8rem, 4vw, 3rem);
   margin: 0 0 .5rem;
-  font-weight: 800;
-  letter-spacing: -.02em;
+  font-weight: 700;
+  letter-spacing: -.01em;
 }
-.deck-header h1 span { color: #b9c2ff; font-weight: 500; }
-.deck-header p { color: #aab2d6; margin: 0; }
+.deck-header h1 span { color: var(--gold); font-weight: 400; }
+.deck-header p { color: #aeb6c2; margin: 0; }
 
 /* ---- Deck layout ---- */
 .deck {
@@ -59,7 +86,8 @@ body {
   background: var(--slide-bg);
   border-radius: var(--radius);
   padding: 2.5rem 2.75rem;
-  box-shadow: 0 20px 50px -20px rgba(0,0,0,.5);
+  box-shadow: 0 20px 50px -22px rgba(0,0,0,.55);
+  border: 1px solid var(--border-subtle);
   aspect-ratio: 16 / 9;        /* matches the original deck proportions */
   display: flex;
   flex-direction: column;
@@ -73,56 +101,39 @@ body {
   font-size: .8rem;
   color: var(--muted);
   letter-spacing: .05em;
+  font-variant-numeric: tabular-nums;
 }
 
 .slide__title {
   font-size: clamp(1.4rem, 3vw, 2.2rem);
-  font-weight: 800;
-  letter-spacing: -.02em;
+  font-weight: 700;
+  letter-spacing: -.01em;
   margin: 0 0 1.25rem;
-  color: var(--accent);
+  color: var(--galaxy-primary);
+  text-wrap: balance;
+}
+/* Foundry h2 convention: gold underline on left-aligned content headings */
+.slide--content .slide__title {
+  border-bottom: 2px solid color-mix(in srgb, var(--gold) 45%, transparent);
+  padding-bottom: .5rem;
 }
 
 .slide__subtitle {
   font-size: 1.5rem;
-  font-weight: 600;
-  color: var(--accent-2);
+  font-weight: 700;
+  color: var(--gold);
   margin: 0 0 1rem;
 }
 
 .slide__body ul { margin: .4rem 0; padding-left: 1.3rem; }
 .slide__body > ul { font-size: 1.25rem; }
-.slide__body li { margin: .4rem 0; }
+.slide__body li { margin: .4rem 0; text-wrap: pretty; }
+.slide__body li::marker { color: var(--gold); }
 .slide__body ul ul { font-size: .9em; color: var(--muted); }
+.slide__body ul ul li::marker { color: var(--galaxy-primary); }
 
 .slide__meta { color: var(--muted); margin-top: 1rem; }
 .slide__meta p { margin: .15rem 0; }
-
-.slide__figure { margin: 0; flex: 1; display: flex; align-items: center; justify-content: center; }
-.slide__figure img {
-  max-width: 100%;
-  max-height: 100%;
-  object-fit: contain;
-  border-radius: 8px;
-}
-
-/* ---- Variants ---- */
-.slide--title { text-align: center; align-items: center; background: linear-gradient(135deg,#1e293b,#312e81); color:#fff; }
-.slide--title .slide__title { color: #fff; font-size: clamp(2rem,5vw,3.5rem); }
-.slide--title .slide__subtitle { color: #c7d2fe; }
-.slide--title .slide__meta { color: #aab2d6; }
-
-.slide--section { background: linear-gradient(135deg,#0ea5e9,#6366f1); color:#fff; align-items:center; text-align:center; }
-.slide--section .slide__title { color: #fff; }
-
-.slide--closing { background: linear-gradient(135deg,#059669,#0d9488); color:#fff; text-align:center; align-items:center; }
-.slide--closing .slide__title { color:#fff; }
-.slide--closing .slide__meta { color:#d1fae5; }
-/* keep the tool itself left-aligned even though the slide is centered */
-.slide--closing .slide__blocks { justify-content: flex-start; }
-.slide--closing figure.code,
-.slide--closing figure.code figcaption { text-align: left; }
-.slide--closing figure.code { flex-grow: 0; }
 
 /* ---- Slide blocks (code / notes / images / doc text) ---- */
 /* Row-wrap: two code boxes sit side-by-side; everything else spans the row. */
@@ -142,27 +153,27 @@ body {
 figure.code { margin: 0; }
 figure.code pre {
   margin: 0;
-  background: #0d1117;
-  color: #e6edf3;
+  background: var(--galaxy-dark);
+  color: #f8f9fa;
   border-radius: 10px;
   padding: .9rem 0;
   overflow: auto;
-  font-family: "JetBrains Mono", "SF Mono", ui-monospace, Menlo, Consolas, monospace;
+  font-family: var(--font-mono);
   font-size: clamp(.7rem, 1.4vw, .95rem);
-  line-height: 1.4;
-  border: 1px solid #1f2630;
+  line-height: 1.45;
+  border: 1px solid var(--galaxy-dark-medium);
 }
 figure.code .line { display: block; padding: 0 1rem; white-space: pre; }
 figure.code .line.hl {
-  background: rgba(124, 58, 237, .22);
-  box-shadow: inset 3px 0 0 var(--accent-2);
+  background: color-mix(in srgb, var(--gold) 16%, transparent);
+  box-shadow: inset 3px 0 0 var(--gold);
 }
 figure.code .ln {
   display: inline-block;
   width: 2.2em;
   margin-right: 1em;
   text-align: right;
-  color: #6b7689;
+  color: #7c8597;
   user-select: none;
 }
 figure.code figcaption,
@@ -175,16 +186,28 @@ figure.shot figcaption {
 
 /* Callouts (tooltip text, errors, build notes) */
 .note {
-  border-left: 4px solid var(--accent);
-  background: #f1f5ff;
+  border-left: 4px solid var(--galaxy-primary);
+  background: var(--surface-hover);
   padding: .7rem 1rem;
   border-radius: 0 8px 8px 0;
   font-size: 1.05rem;
 }
-.note--warn { border-color: #d97706; background: #fff7ed; }
-.note__title { display: block; font-weight: 700; color: var(--accent); margin-bottom: .15rem; }
-.note--warn .note__title { color: #b45309; }
-.note code { background: #e2e8f0; padding: .05em .35em; border-radius: 4px; font-size: .9em; }
+.note--warn {
+  border-color: var(--gold);
+  background: color-mix(in srgb, var(--gold) 12%, var(--surface));
+}
+.note__title { display: block; font-weight: 700; color: var(--galaxy-primary); margin-bottom: .15rem; }
+.note--warn .note__title { color: #856404; }
+
+/* Inline code, Galaxy-style */
+.note code, .doc code, .slide__body code {
+  background: var(--surface-hover);
+  padding: .12rem .375rem;
+  border-radius: 4px;
+  font-family: var(--font-mono);
+  font-size: .9em;
+  font-weight: 500;
+}
 
 /* Screenshots kept for UI context */
 figure.shot { margin: 0; text-align: center; }
@@ -193,17 +216,15 @@ figure.shot img {
   max-height: 55vh;
   object-fit: contain;
   border-radius: 8px;
-  box-shadow: 0 8px 24px -12px rgba(0,0,0,.4);
+  border: 1px solid var(--border-subtle);
+  box-shadow: 0 8px 24px -14px rgba(44,49,67,.5);
 }
 
 /* Converted documentation text */
-.prose { font-size: 1.1rem; margin: 0; }
+.prose { font-size: 1.1rem; margin: 0; text-wrap: pretty; }
 ul.doc, ol.doc { font-size: 1.1rem; margin: 0; padding-left: 1.5rem; }
-ul.doc li, ol.doc li { margin: .35rem 0; }
-.doc code, .slide__body code {
-  background: #eef1f6; padding: .05em .35em; border-radius: 4px;
-  font-family: ui-monospace, Menlo, monospace; font-size: .9em;
-}
+ul.doc li, ol.doc li { margin: .35rem 0; text-wrap: pretty; }
+ul.doc li::marker, ol.doc li::marker { color: var(--galaxy-primary); font-weight: 700; }
 
 /* Content slides: center vertically, but fall back to top-align + scroll
    (the `safe` keyword) when the content is taller than the slide. */
@@ -211,6 +232,41 @@ ul.doc li, ol.doc li { margin: .35rem 0; }
 
 /* slides that are mostly a screenshot: let the image breathe */
 .slide:has(figure.shot):not(:has(.slide__body)):not(:has(figure.code)) { padding: 1.5rem; }
+
+/* ---- Variants ---- */
+.slide--title {
+  text-align: center; align-items: center; color: #f8f9fa;
+  background: linear-gradient(135deg, var(--galaxy-dark) 0%, var(--galaxy-primary) 100%);
+  border-color: transparent;
+}
+.slide--title .slide__title { color: #fff; font-size: clamp(2rem, 5vw, 3.4rem); }
+.slide--title .slide__subtitle { color: var(--gold); }
+.slide--title .slide__meta { color: #c7d0db; }
+
+.slide--section {
+  text-align: center; align-items: center; color: #f8f9fa;
+  background: linear-gradient(135deg, var(--galaxy-primary) 0%, var(--galaxy-dark) 100%);
+  border-color: transparent;
+}
+.slide--section .slide__title {
+  color: #fff;
+  border-bottom: 3px solid var(--gold);
+  padding-bottom: .6rem;
+}
+
+.slide--closing {
+  text-align: center; align-items: center; color: #f8f9fa;
+  background: linear-gradient(135deg, var(--galaxy-dark) 0%, var(--galaxy-primary) 100%);
+  border-color: transparent;
+}
+.slide--closing .slide__title { color: #fff; }
+.slide--closing .slide__meta { color: var(--gold); font-size: 1.2rem; font-weight: 700; }
+/* center the tool box on the slide, but keep the code text left-aligned */
+.slide--closing .slide__blocks { justify-content: center; }
+.slide--closing figure.code,
+.slide--closing figure.code figcaption { text-align: left; }
+.slide--closing figure.code { flex: 0 1 auto; width: max-content; max-width: 100%; }
+.slide--closing figure.code figcaption { color: #c7d0db; }
 
 @media (max-width: 640px) {
   .slide { aspect-ratio: auto; padding: 1.5rem; }
@@ -220,16 +276,17 @@ ul.doc li, ol.doc li { margin: .35rem 0; }
 .toolbar { position: fixed; top: 1rem; right: 1rem; z-index: 50; }
 .toolbar button {
   font: inherit; font-size: .85rem; cursor: pointer;
-  background: rgba(255,255,255,.12); color: #eef1ff;
-  border: 1px solid rgba(255,255,255,.28);
+  background: rgba(255,255,255,.1); color: #f8f9fa;
+  border: 1px solid rgba(232,197,71,.5);
   padding: .45rem .85rem; border-radius: 8px;
   backdrop-filter: blur(6px);
+  transition: background .15s, color .15s;
 }
-.toolbar button:hover { background: rgba(255,255,255,.24); }
-.deck-header .hint { font-size: .85rem; color: #8b94bd; margin-top: .5rem; }
+.toolbar button:hover { background: var(--gold); color: var(--galaxy-dark); border-color: var(--gold); }
+.deck-header .hint { font-size: .85rem; color: #97a0ad; margin-top: .5rem; }
 .deck-header kbd {
-  font-family: ui-monospace, Menlo, monospace; font-size: .8em;
-  background: rgba(255,255,255,.1); border: 1px solid rgba(255,255,255,.25);
+  font-family: var(--font-mono); font-size: .8em;
+  background: rgba(255,255,255,.08); border: 1px solid rgba(255,255,255,.22);
   border-radius: 4px; padding: .05em .4em;
 }
 
@@ -245,7 +302,7 @@ body.present .deck {
 }
 body.present .slide {
   width: 100vw; height: 100vh; min-height: 100vh;
-  max-width: none; margin: 0; border-radius: 0;
+  max-width: none; margin: 0; border-radius: 0; border: 0;
   aspect-ratio: auto; box-shadow: none;
   scroll-snap-align: start; scroll-snap-stop: always;
   padding: 5vh 7vw;

@@ -48,20 +48,34 @@ marius@galaxyproject.org
 
 ## Slide 5: The answer — User-Defined Tools
 
-```yaml {hl=8}
+```yaml {hl=8-18}
 class: GalaxyUserTool
-name: Boxplot (ggplot2)
-description: Boxplot from a tabular file
-container: rocker/tidyverse
+id: ggplot2-boxplot
+name: GGplot2 Boxplot
+version: "0.1.0"
+description: Boxplot from tabular data — a grouping column and a numeric column
+container: quay.io/biocontainers/r-ggplot2
+shell_command: Rscript boxplot.R
+configfiles:
+  - filename: boxplot.R
+    content: |
+      library(ggplot2)
+      data <- read.table("$(inputs.input_file.path)", header=TRUE, sep="\t")
+      ggplot(data, aes(x = .data[["$(inputs.grouping_column)"]],
+                       y = .data[["$(inputs.numeric_column)"]])) +
+        geom_boxplot(fill="lightblue", color="darkblue") +
+        labs(title="$(inputs.plot_title)") +
+        theme_bw()
+      ggsave("boxplot.pdf", width=8, height=6, dpi=300)
 inputs:
-  - {name: table, type: data, format: tabular}
-  - {name: group_column, type: text}
-  - {name: value_column, type: text}
-shell_command: Rscript plot.R     # the R script lives in a configfile
+  - {name: input_file, type: data, format: tabular}
+  - {name: grouping_column, type: text}
+  - {name: numeric_column, type: text}
+  - {name: plot_title, type: text}
 outputs:
-  - {name: plot, type: data, format: png, from_work_dir: boxplot.png}
+  - {name: plot, type: data, format: pdf, from_work_dir: boxplot.pdf}
 ```
-*A User-Defined Tool: typed inputs, a container, sandboxed JS expressions — safe to build and run yourself in seconds, no XML and no arbitrary Python. For the personal and the exploratory; curated tools stay the backbone. (Our running example.)*
+*Anatomy of a User-Defined Tool: typed inputs, a pinned container, and the R script itself in a `configfile` — safe to build and run yourself, no XML and no arbitrary Python. For the personal and the exploratory; curated tools stay the backbone. (Our running example.)*
 
 ---
 
@@ -113,28 +127,34 @@ outputs:
 
 ## Slide 11: The agent writes it — typed, not trusted blindly
 
-```yaml {hl=10-16}
+```yaml {hl=12-14,16}
 class: GalaxyUserTool
-name: Boxplot (ggplot2)
-description: Boxplot from a tabular file
-container: rocker/tidyverse
-inputs:
-  - {name: table, type: data, format: tabular}
-  - {name: group_column, type: text}
-  - {name: value_column, type: text}
-shell_command: Rscript plot.R
+id: ggplot2-boxplot
+name: GGplot2 Boxplot
+version: "0.1.0"
+description: Boxplot from tabular data — a grouping column and a numeric column
+container: quay.io/biocontainers/r-ggplot2
+shell_command: Rscript boxplot.R
 configfiles:
-  - name: plot.R
+  - filename: boxplot.R
     content: |
       library(ggplot2)
-      df <- read.delim("$(inputs.table.path)")
-      ggplot(df, aes(`$(inputs.group_column)`, `$(inputs.value_column)`)) +
-        geom_boxplot()
-      ggsave("boxplot.png")
+      data <- read.table("$(inputs.input_file.path)", header=TRUE, sep="\t")
+      ggplot(data, aes(x = .data[["$(inputs.grouping_column)"]],
+                       y = .data[["$(inputs.numeric_column)"]])) +
+        geom_boxplot(fill="lightblue", color="darkblue") +
+        labs(title="$(inputs.plot_title)") +
+        theme_bw()
+      ggsave("boxplot.pdf", width=8, height=6, dpi=300)
+inputs:
+  - {name: input_file, type: data, format: tabular}
+  - {name: grouping_column, type: text}
+  - {name: numeric_column, type: text}
+  - {name: plot_title, type: text}
 outputs:
-  - {name: plot, type: data, format: png, from_work_dir: boxplot.png}
+  - {name: plot, type: data, format: pdf, from_work_dir: boxplot.pdf}
 ```
-*The R script lands in a `configfile`; `inputs.*` are still type-checked by Monaco and the linter — generated code that doesn’t type-check never runs.*
+*The agent produced exactly this. Every `$(inputs.*)` in the R script is type-checked by Monaco against the tool’s schema — generated code that doesn’t type-check never runs.*
 
 ---
 
@@ -176,7 +196,7 @@ A tool should earn trust **incrementally** — without the full IUC toolshed ove
 - **Static schema** — generated JSON Schema
   - every input/output type-checks; outputs line up with the inputs they feed
 - **Pydantic validators** — the params *are* Pydantic models
-  - value & cross-field rules (a cutoff in range; `group_column` ≠ `value_column`); wiring across the workflow
+  - value & cross-field rules (a cutoff in range; `grouping_column` ≠ `numeric_column`); wiring across the workflow
 - **Linter** — lives in `galaxy-tool-util`
   - the *same* engine that already powers the editor’s errors — annotations, deprecations, missing tests
 
@@ -188,8 +208,8 @@ Inputs and outputs are formally typed, so a workflow of UDTs is a **portable art
 
 ```console
 $ planemo validate workflow.gxwf.yml
-✗ filter step:  'value_column' references a column not produced upstream
-✗ boxplot step: 'group_column' equals 'value_column'   (model validator)
+✗ filter step:  'numeric_column' references a column not produced upstream
+✗ boxplot step: 'grouping_column' equals 'numeric_column'  (model validator)
 ⚠ boxplot step: tool has no test case                  (lint)
 
 # …fix…

@@ -121,7 +121,7 @@ shell_command: |
 
 ---
 
-## Slide 9: Your LLM code, made reproducible {.section}
+## Slide 9: Your LLM code — made reproducible and trustworthy {.section}
 
 ---
 

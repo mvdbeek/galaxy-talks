@@ -338,7 +338,7 @@ def build_html(deck_title, slides):
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Galaxy Tools 2.0 — Bring your own!</title>
+<title>User-Defined Tools — From LLM Code to Validated Workflows</title>
 <link rel="stylesheet" href="slides.css">
 </head>
 <body>

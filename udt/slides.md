@@ -1,10 +1,10 @@
-# Galaxy Tools 2.0 — Bring your own!
+# User-Defined Tools — From LLM Code to Validated Workflows
 
 *Source of truth for the deck. Edit this file, then run `python3 build.py` to regenerate `slides.html`. See `build.py` for the small set of Markdown conventions used below.*
 
 ---
 
-## Slide 1: Galaxy Tools 2.0 {.title}
+## Slide 1: User-Defined Tools {.title}
 
 **Bring your own!**
 

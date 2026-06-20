@@ -1,0 +1,8 @@
+# Ignore all dotfiles (.DS_Store, editor swap files, .venv, etc.) but keep
+# this .gitignore tracked. Re-include a dotfile later with e.g. !.github/
+.*
+!.gitignore
+
+# Python
+__pycache__/
+*.py[cod]

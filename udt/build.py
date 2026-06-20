@@ -370,6 +370,12 @@ def build_html(deck_title, slides):
     const i = Math.max(0, Math.min(slides.length - 1, n));
     slides[i].scrollIntoView({{ behavior: 'smooth', block: 'start' }});
   }}
+  function restore(i) {{
+    // after the layout reflows out of present mode, bring the slide we were
+    // on back into view (instant, no animation)
+    requestAnimationFrame(() =>
+      slides[i].scrollIntoView({{ block: 'center' }}));
+  }}
   function present(on) {{
     if (on) {{
       body.classList.add('present');
@@ -377,14 +383,21 @@ def build_html(deck_title, slides):
       if (el.requestFullscreen) el.requestFullscreen().catch(() => {{}});
       requestAnimationFrame(() => go(nearest()));
     }} else {{
+      const i = nearest();
       body.classList.remove('present');
       if (document.fullscreenElement) document.exitFullscreen();
+      restore(i);
     }}
   }}
   document.getElementById('presentBtn')
     .addEventListener('click', () => present(!isPresent()));
   document.addEventListener('fullscreenchange', () => {{
-    if (!document.fullscreenElement) body.classList.remove('present');
+    // catches Esc / OS-level fullscreen exit; keep our current slide
+    if (!document.fullscreenElement && isPresent()) {{
+      const i = nearest();
+      body.classList.remove('present');
+      restore(i);
+    }}
   }});
   document.addEventListener('keydown', (e) => {{
     if (['ArrowRight', 'ArrowDown', 'PageDown', ' '].includes(e.key)) {{ e.preventDefault(); go(nearest() + 1); }}

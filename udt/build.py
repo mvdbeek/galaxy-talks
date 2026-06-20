@@ -359,7 +359,7 @@ def build_html(deck_title, slides):
 <header class="deck-header">
   <h1>{h1}</h1>
   <p>{byline}</p>
-  <p class="hint">Press <kbd>f</kbd> for fullscreen · <kbd>←</kbd> <kbd>→</kbd> to navigate</p>
+  <p class="hint">Press <kbd>f</kbd> for fullscreen · <kbd>←</kbd> <kbd>→</kbd> to navigate · type a <kbd>number</kbd> to jump</p>
 </header>
 <main class="deck">
 {body}
@@ -435,12 +435,41 @@ def build_html(deck_title, slides):
     fitTimer = setTimeout(fitAll, 150);
   }});
   if (document.fonts && document.fonts.ready) document.fonts.ready.then(fitAll);
+
+  // type a number (multi-digit) then Enter — or just pause — to jump to a slide
+  let gotoBuf = '', gotoTimer;
+  const gotoHint = document.createElement('div');
+  gotoHint.className = 'goto-hint';
+  gotoHint.setAttribute('aria-hidden', 'true');
+  document.body.appendChild(gotoHint);
+  function gotoCommit() {{
+    clearTimeout(gotoTimer);
+    if (gotoBuf) {{ const n = parseInt(gotoBuf, 10); if (!isNaN(n)) go(n - 1); }}
+    gotoBuf = '';
+    gotoHint.classList.remove('show');
+  }}
+  function gotoCancel() {{
+    clearTimeout(gotoTimer);
+    gotoBuf = '';
+    gotoHint.classList.remove('show');
+  }}
+  function gotoDigit(d) {{
+    gotoBuf += d;
+    gotoHint.textContent = '→ ' + gotoBuf + ' / ' + slides.length;
+    gotoHint.classList.add('show');
+    clearTimeout(gotoTimer);
+    gotoTimer = setTimeout(gotoCommit, 900);
+  }}
+
   document.addEventListener('keydown', (e) => {{
-    if (['ArrowRight', 'ArrowDown', 'PageDown', ' '].includes(e.key)) {{ e.preventDefault(); go(nearest() + 1); }}
-    else if (['ArrowLeft', 'ArrowUp', 'PageUp'].includes(e.key)) {{ e.preventDefault(); go(nearest() - 1); }}
-    else if (e.key === 'f' || e.key === 'F') {{ present(!isPresent()); }}
-    else if (e.key === 'Home') {{ e.preventDefault(); go(0); }}
-    else if (e.key === 'End') {{ e.preventDefault(); go(slides.length - 1); }}
+    if (e.key >= '0' && e.key <= '9') {{ e.preventDefault(); gotoDigit(e.key); }}
+    else if (e.key === 'Enter') {{ e.preventDefault(); gotoCommit(); }}
+    else if (['ArrowRight', 'ArrowDown', 'PageDown', ' '].includes(e.key)) {{ e.preventDefault(); gotoCancel(); go(nearest() + 1); }}
+    else if (['ArrowLeft', 'ArrowUp', 'PageUp'].includes(e.key)) {{ e.preventDefault(); gotoCancel(); go(nearest() - 1); }}
+    else if (e.key === 'f' || e.key === 'F') {{ gotoCancel(); present(!isPresent()); }}
+    else if (e.key === 'Home') {{ e.preventDefault(); gotoCancel(); go(0); }}
+    else if (e.key === 'End') {{ e.preventDefault(); gotoCancel(); go(slides.length - 1); }}
+    else if (e.key === 'Escape') {{ gotoCancel(); }}
   }});
 }})();
 </script>

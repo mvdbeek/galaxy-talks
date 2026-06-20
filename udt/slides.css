@@ -295,6 +295,19 @@ ul.doc li::marker, ol.doc li::marker { color: var(--galaxy-primary); font-weight
   border-radius: 4px; padding: .05em .4em;
 }
 
+/* ---- "type a number to jump" indicator ---- */
+.goto-hint {
+  position: fixed; bottom: 1.25rem; left: 1.25rem; z-index: 60;
+  font-family: var(--font-mono); font-size: 1.15rem; font-variant-numeric: tabular-nums;
+  background: rgba(44,49,67,.92); color: var(--gold);
+  border: 1px solid rgba(232,197,71,.5); border-radius: 8px;
+  padding: .4rem .8rem; backdrop-filter: blur(6px);
+  opacity: 0; transform: translateY(6px); pointer-events: none;
+  transition: opacity .12s, transform .12s;
+}
+.goto-hint.show { opacity: 1; transform: none; }
+body.present .goto-hint { bottom: 2rem; left: 2rem; font-size: 1.5rem; }
+
 /* ---- Present / fullscreen mode: one slide fills the screen ---- */
 body.present { overflow: hidden; }
 body.present .deck-header { display: none; }

@@ -2,6 +2,7 @@
 # this .gitignore tracked. Re-include a dotfile later with e.g. !.github/
 .*
 !.gitignore
+!.github/
 
 # Python
 __pycache__/

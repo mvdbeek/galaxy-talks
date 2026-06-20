@@ -1,18 +1,18 @@
 # Galaxy Tools 2.0 — Bring your own!
 
-*Converted from `User defined tools.pptx` / `User defined tools (1).pdf`. Code transcribed from the slide screenshots.*
-
+*Source of truth for the deck. Edit this file, then run `python3 build.py` to regenerate `slides.html`. See `build.py` for the small set of Markdown conventions used below.*
 
 ---
 
-## Slide 1: Galaxy Tools 2.0
+## Slide 1: Galaxy Tools 2.0 {.title}
 
 **Bring your own!**
 
-
-Marius van den Beek  
-PSU / SCI-SCALE  
-marius@galaxyproject.org  
+::: meta
+Marius van den Beek
+PSU / SCI-SCALE
+marius@galaxyproject.org
+:::
 
 ---
 
@@ -25,13 +25,13 @@ marius@galaxyproject.org
 
 ---
 
-## Slide 3: Why can’t users install tools?
+## Slide 3: Why can’t users install tools? {.section}
 
 ---
 
 ## Slide 4: Templating with Cheetah
 
-```xml
+```xml {hl=8-10}
 <tool id="cat" version="0.1">
     <description>tail-to-head</description>
     <requirements>
@@ -58,9 +58,9 @@ cat
 
 ## Slide 5: Templating with Cheetah 🎃
 
-> **The catch:** Cheetah templates are evaluated as arbitrary Python while the job command is built — so a tool author can read the database, touch the filesystem, do anything. That’s exactly why users can’t be allowed to install tools.
+> [!WARN] **The catch:** Cheetah templates are evaluated as **arbitrary Python** while the job command is built — so a tool author can read the database, touch the filesystem, do anything. That’s exactly why users can’t be allowed to install tools.
 
-```xml
+```xml {hl=2-4}
 <command><![CDATA[
     #from pathlib import Path
     #user_id = $__app__.model.session().query($__app__.model.User.id).one()
@@ -78,13 +78,13 @@ cat
 
 ---
 
-## Slide 7: There has to be a better way!
+## Slide 7: There has to be a better way! {.section}
 
 ---
 
 ## Slide 8: Javascript expressions & JSON inputs
 
-```yaml
+```yaml {hl=8}
 class: GalaxyUserTool
 id: cat_user_defined
 version: "0.1"
@@ -175,7 +175,7 @@ outputs:
 ```
 *Tool Editor*
 
-> **Autocomplete:** In the editor, Monaco knows the inferred type of input inside the expression and offers autocomplete:
+> **Autocomplete:** In the editor, Monaco knows the inferred type of `input` inside the expression and offers autocomplete:
 
 ```typescript
 (parameter) input: {
@@ -222,7 +222,7 @@ Path
 
 ## Slide 13: Monaco + Typescript interfaces
 
-> **Type checking:** Typos in the expression are caught as real TypeScript errors, with suggestions:
+> [!WARN] **Type checking:** Typos in the expression are caught as real TypeScript errors, with suggestions:
 
 ```text
 Property 'datsets' does not exist on type '{ readonly datasets: readonly
@@ -251,7 +251,7 @@ Did you mean 'datasets'?
 
 ---
 
-## Slide 15: Behind the scenes
+## Slide 15: Behind the scenes {.section}
 
 ---
 
@@ -337,8 +337,8 @@ Did you mean 'datasets'?
 
 > To enable this feature:
 
-1. Set enable_beta_tool_formats: true in your Galaxy configuration.
-2. Create a role of type Custom Tool Execution in the admin user interface.
+1. Set `enable_beta_tool_formats: true` in your Galaxy configuration.
+2. Create a role of type `Custom Tool Execution` in the admin user interface.
 3. Assign users or groups to this role.
 
 ---
@@ -369,11 +369,11 @@ Current limitations include:
 
 - Access to reference data is not supported
 - Access to metadata and metadata files (such as BAM indexes) is not supported
-- Access to the extra_files directory is not supported
+- Access to the `extra_files` directory is not supported
 
 ---
 
-## Slide 23: Coming to a server near you soon!
+## Slide 23: Coming to a server near you soon! {.closing}
 
 ```yaml
 class: GalaxyUserTool
@@ -384,7 +384,7 @@ description: Bring your own gratitude
 container: busybox
 shell_command: |
   echo "Thank you John Chilton, Dannon Baker, Michael Crusoe,
-  Anton Nekrutenko, Nicola Soranzo and the audience at GCC!" > thanks.txt
+  Nicola Soranzo, Anton Nekrutenko, and the audience at GCC!" > thanks.txt
 outputs:
   - name: output1
     type: data
@@ -392,4 +392,6 @@ outputs:
 ```
 *One last user-defined tool*
 
-With gratitude 💜  
+::: meta
+With gratitude 💜
+:::

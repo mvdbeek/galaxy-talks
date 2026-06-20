@@ -404,12 +404,14 @@ def build_html(deck_title, slides):
   }}
   function fitAll() {{ if (isPresent()) slides.forEach(fitSlide); }}
   function unfit() {{ slides.forEach((s) => s.style.removeProperty('--fit')); }}
+  let presentTarget = 0;
   function present(on) {{
     if (on) {{
+      presentTarget = nearest();   // slide visible now, captured before the reflow
       body.classList.add('present');
       const el = document.documentElement;
       if (el.requestFullscreen) el.requestFullscreen().catch(() => {{}});
-      requestAnimationFrame(() => {{ fitAll(); go(nearest()); }});
+      requestAnimationFrame(() => {{ fitAll(); go(presentTarget); }});
     }} else {{
       const i = nearest();
       body.classList.remove('present');
@@ -421,8 +423,12 @@ def build_html(deck_title, slides):
   document.getElementById('presentBtn')
     .addEventListener('click', () => present(!isPresent()));
   document.addEventListener('fullscreenchange', () => {{
-    // catches Esc / OS-level fullscreen exit; keep our current slide
-    if (!document.fullscreenElement && isPresent()) {{
+    if (document.fullscreenElement && isPresent()) {{
+      // fullscreen just engaged — re-anchor to the intended slide after the
+      // viewport resize (and re-fit for the new size)
+      requestAnimationFrame(() => {{ fitAll(); go(presentTarget); }});
+    }} else if (!document.fullscreenElement && isPresent()) {{
+      // Esc / OS-level fullscreen exit; keep our current slide
       const i = nearest();
       body.classList.remove('present');
       unfit();

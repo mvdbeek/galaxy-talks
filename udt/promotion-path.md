@@ -21,6 +21,14 @@ no peer review, no shared test record, no provenance/annotation, no signal of qu
 process (PR, review, CI, conda/container packaging, maintenance) is the right bar for the global
 toolshed, but it is far too heavy for "this little plotting tool my lab uses every week."
 
+### The duplication failure mode
+
+Easy creation has a cost if there's no path to converge: **duplication.** A hundred users each build
+their own slightly-different `bwa` wrapper — none reviewed, tested, or annotated — and they drift
+apart. Reproducibility and trust quietly erode. The answer isn't to forbid personal tools; it's to
+give the good ones a path to merge upward into shared, then curated, tools so effort accumulates
+instead of fragmenting.
+
 ## Goal
 
 A **graduated path** that lets a tool earn trust incrementally, lowering the barrier to contribution
@@ -28,16 +36,17 @@ while preserving quality — without requiring the full IUC toolshed overhead at
 
 ## Proposed stages
 
-| Stage | Who can run it | Gate to reach this stage |
-|------|----------------|--------------------------|
-| **1. Personal** | creator only | — (create it) |
-| **2. Shared** | anyone given the workflow / link | creator shares; passes static validation (schema + linter) |
-| **3. Reviewed** | a group / instance | ≥1 peer review + at least one recorded test case |
-| **4. Annotated** | a group / instance | metadata complete: description, EDAM/ontology terms, license, author, citation |
-| **5. Community** | global / cross-instance | maintainer sign-off; promotion to a curated registry |
+| Stage | Who can run it | Lives in | Gate to reach this stage |
+|------|----------------|----------|--------------------------|
+| **1. Personal** | creator only | the creator's account | — (create it) |
+| **2. Shared** | anyone given the workflow / link | rides in workflows; export to disk | creator shares; passes static validation (schema + linter) |
+| **3. Project** | a lab / project / instance | a **GitHub repo with CI** | adopted into the repo; tests + lint run on every change; reviewed and annotated (description, EDAM/ontology terms, license, author, citation) |
+| **4. IUC → Tool Shed** | global / cross-instance | the **IUC** repo → **Tool Shed** | proven generally useful; IUC review + maintainer sign-off; published as a curated tool |
 
-Each stage adds exactly one kind of trust signal — execution scope, review, testing, annotation,
-curation — so a tool can stop at whatever level fits its audience.
+Each step adds trust *and* reach — execution scope, review, testing, annotation, curation — so a tool
+can stop at whatever level fits its audience, and good tools **converge upward** instead of
+duplicating. Stage 3 is where a tool gets real engineering hygiene (version control, CI) without the
+full Tool Shed overhead; stage 4 is reserved for tools that have proven broadly useful.
 
 ## Mechanisms to design
 

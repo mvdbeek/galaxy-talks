@@ -100,11 +100,30 @@ outputs:
 
 ---
 
-## Slide 8: Your LLM code, made reproducible {.section}
+## Slide 8: …and ask for the resources you need
+
+```yaml {hl=2-8}
+container: quay.io/biocontainers/foldseek:10.941cd33
+requirements:
+  - type: resource
+    cores_min: 32
+    ram_min: 8192            # MB
+    gpu_memory_min: 1
+    cuda_device_count_min: 0.5
+    cuda_device_count_max: 1
+shell_command: |
+  foldseek easy-cluster "$(inputs.seqs.path)" out tmp \
+    --gpu 1 --threads "$GALAXY_SLOTS"
+```
+*A real GPU tool (Foldseek + ProstT5 structural clustering). The `resource` block feeds Total Perspective Vortex (TPV), which schedules the job onto a node that actually has the cores, memory, and GPU — so you prototype against the hardware you’ll really run on.*
 
 ---
 
-## Slide 9: LLMs write great throwaway code
+## Slide 9: Your LLM code, made reproducible {.section}
+
+---
+
+## Slide 10: LLMs write great throwaway code
 
 - Everyone is generating analysis code with an LLM
   - …a pandas snippet, an R plot, a one-off filter
@@ -116,7 +135,7 @@ outputs:
 
 ---
 
-## Slide 10: So let’s not write it by hand
+## Slide 11: So let’s not write it by hand
 
 > [!WARN] **Live demo:** “Write a tool that uses ggplot2 to create a boxplot from a tabular file. The user should select a grouping column and a numeric column. Put the R script in a configfile.”
 
@@ -125,7 +144,7 @@ outputs:
 
 ---
 
-## Slide 11: The agent writes it — typed, not trusted blindly
+## Slide 12: The agent writes it — typed, not trusted blindly
 
 ```yaml {hl=12-14,16}
 class: GalaxyUserTool
@@ -158,11 +177,21 @@ outputs:
 
 ---
 
-## Slide 12: From my tool to our tool {.section}
+## Slide 13: From my tool to our tool {.section}
 
 ---
 
-## Slide 13: Sharing — what works today
+## Slide 14: We don’t want 100 bwa tools
+
+- Freedom to create has a failure mode: **duplication**
+- 100 users each build their own slightly-different `bwa` wrapper
+  - none reviewed, tested, or annotated — and they all drift apart
+  - reproducibility and trust quietly erode
+- The fix isn’t to forbid personal tools — it’s to give the good ones a path to **converge**
+
+---
+
+## Slide 15: Sharing — what works today
 
 User-defined tools are **private to their creator**. But they already travel:
 
@@ -173,25 +202,24 @@ User-defined tools are **private to their creator**. But they already travel:
 
 ---
 
-## Slide 14: Proposal — a graduated promotion path
+## Slide 16: Proposal — a graduated promotion path
 
-A tool should earn trust **incrementally** — without the full IUC toolshed overhead at every step:
+A tool should earn trust *and reach* incrementally, so good tools **converge** instead of duplicating:
 
-1. **Personal** — just you (create it)
-2. **Shared** — rides along in a workflow; passes static validation
-3. **Reviewed** — ≥1 peer review + at least one recorded test
-4. **Annotated** — description, ontology terms, license, citation
-5. **Community** — maintainer sign-off → a curated registry
+1. **Personal** — create and iterate; just you
+2. **Shared** — rides along in workflows / export to disk; passes static validation
+3. **Project** — adopted into a **GitHub repo with CI** (tests + lint on every change); reviewed and annotated — for a lab or community project
+4. **IUC → Tool Shed** — once it proves generally useful: promoted to the **IUC** and published on the **Tool Shed** as a curated, globally available tool
 
-> Each stage adds exactly one trust signal — scope, review, testing, annotation, curation. Full proposal in `promotion-path.md`.
-
----
-
-## Slide 15: Check the workflow before you run it {.section}
+> Each step adds review, testing, and reach — without the full toolshed overhead up front. Full proposal in `promotion-path.md`.
 
 ---
 
-## Slide 16: Validation in three layers — all run today, no runtime
+## Slide 17: Check the workflow before you run it {.section}
+
+---
+
+## Slide 18: Validation in three layers — all run today, no runtime
 
 - **Static schema** — generated JSON Schema
   - every input/output type-checks; outputs line up with the inputs they feed
@@ -202,7 +230,7 @@ A tool should earn trust **incrementally** — without the full IUC toolshed ove
 
 ---
 
-## Slide 17: Proposal — expose it through planemo
+## Slide 19: Proposal — expose it through planemo
 
 Inputs and outputs are formally typed, so a workflow of UDTs is a **portable artifact** you can validate anywhere — in a repo, in CI, with no Galaxy server:
 
@@ -221,7 +249,7 @@ $ planemo validate workflow.gxwf.yml
 
 ---
 
-## Slide 18: Coming to a server near you soon! {.closing}
+## Slide 20: Coming to a server near you soon! {.closing}
 
 ```yaml
 class: GalaxyUserTool

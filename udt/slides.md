@@ -18,7 +18,9 @@ marius@galaxyproject.org
 
 ---
 
-## Slide 2: Why can’t users just install tools? {.section}
+## Slide 2: From users to tool authors {.section}
+
+Lower the barrier, grow the community — Accessible · Reproducible · Transparent
 
 ---
 
@@ -42,7 +44,7 @@ marius@galaxyproject.org
 ![Slide 6](images/slide-06.png)
 *galaxyproject/tools-iuc: thousands of carefully reviewed tools — one of Galaxy’s greatest strengths. Trusted, reproducible tools are exactly what make trusted, reproducible workflows.*
 
-> **A high bar by design:** and not every need fits it — the one-off, the exploratory, the “I need xyz, right now.” That gap is what user-defined tools fill — *alongside* curation, not instead of it.
+> **A high bar by design:** not every need fits it:  one-off, exploratory, “I need xyz, right now.” That gap is what user-defined (glue) tools fill.
 
 ---
 

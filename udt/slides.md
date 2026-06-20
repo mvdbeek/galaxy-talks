@@ -191,17 +191,21 @@ $ planemo validate workflow.gxwf.yml
 
 ```yaml
 class: GalaxyUserTool
+id: thank-you
+version: "1.0"
 name: Thank You!
 description: Bring your own gratitude
 container: busybox
 shell_command: |
-  echo "An LLM writes it → the editor types it → the community
-  promotes it → planemo verifies it. Bring your own tool!" > thanks.txt
+  echo "Thank you John Chilton, Dannon Baker, Michael Crusoe,
+  Nicola Soranzo, Anton Nekrutenko, and the audience at GCC!" > thanks.txt
 outputs:
-  - {name: output1, type: data, from_work_dir: thanks.txt}
+  - name: output1
+    type: data
+    from_work_dir: thanks.txt
 ```
-*Enable it, build one, help build the path. Thanks to John Chilton, Dannon Baker, Michael Crusoe, Nicola Soranzo, Anton Nekrutenko, and the audience at GCC!*
+*One last user-defined tool*
 
 ::: meta
-With gratitude 💜
+Bring Your Own Tools
 :::

@@ -54,7 +54,7 @@ id: ggplot2-boxplot
 name: GGplot2 Boxplot
 version: "0.1.0"
 description: Boxplot from tabular data — a grouping column and a numeric column
-container: quay.io/biocontainers/r-ggplot2
+container: quay.io/biocontainers/mulled-v2-7f8b12fca13e111f00a2151c6311f06e7b9ef182:5830a049cfa83bf9728d3496544e64969e1ef789-0
 shell_command: Rscript boxplot.R
 configfiles:
   - filename: boxplot.R
@@ -133,7 +133,7 @@ id: ggplot2-boxplot
 name: GGplot2 Boxplot
 version: "0.1.0"
 description: Boxplot from tabular data — a grouping column and a numeric column
-container: quay.io/biocontainers/r-ggplot2
+container: quay.io/biocontainers/mulled-v2-7f8b12fca13e111f00a2151c6311f06e7b9ef182:5830a049cfa83bf9728d3496544e64969e1ef789-0
 shell_command: Rscript boxplot.R
 configfiles:
   - filename: boxplot.R

@@ -239,7 +239,7 @@ name: Thank You!
 description: Bring your own gratitude
 container: busybox
 shell_command: |
-  echo "Thank you to ohn Chilton, Dannon Baker, Michael Crusoe,
+  echo "Thank you to John Chilton, Dannon Baker, Michael Crusoe,
   Nicola Soranzo, Nate Coraor, Anton Nekrutenko,
   and the audience at GCC!" > thanks.txt
 outputs:

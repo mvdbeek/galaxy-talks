@@ -29,6 +29,7 @@ Markdown dialect (plain Markdown + a few lightweight conventions):
   > [!WARN] **Title:** text       variant; leading **Title:** sets the note title.
 
   ![alt](images/slide-10.png)     a screenshot (slide number read from the path)
+  [![alt](images/slide-10.png)](url)   linked screenshot (opens url in a new tab)
   *caption*
 
   - bullet                        a list that is a slide's only content becomes
@@ -71,6 +72,7 @@ def parse_hl(attr):
 HEAD_RE = re.compile(r"^## Slide (\d+):\s*(.*?)\s*(?:\{\.(\w+)\})?\s*$")
 FENCE_RE = re.compile(r"^```(\S+)?\s*(?:\{([^}]*)\})?\s*$")
 IMG_RE = re.compile(r"^!\[[^\]]*\]\((.+?)\)\s*$")
+LINKED_IMG_RE = re.compile(r"^\[!\[[^\]]*\]\((.+?)\)\]\((.+?)\)\s*$")  # [![alt](img)](url)
 ITALIC_RE = re.compile(r"^\*(.+)\*\s*$")
 OL_RE = re.compile(r"^(\s*)\d+\.\s+(.*)$")
 UL_RE = re.compile(r"^(\s*)-\s+(.*)$")
@@ -129,13 +131,14 @@ def parse_slide(num, title, stype, lines):
                            "caption": cap, "hl": hl})
             continue
 
-        # image
-        m = IMG_RE.match(line)
+        # image (optionally wrapped in a link: [![alt](img)](url))
+        m = LINKED_IMG_RE.match(line) or IMG_RE.match(line)
         if m:
+            href = m.group(2) if m.re is LINKED_IMG_RE else None
             n = int(re.search(r"slide-(\d+)", m.group(1)).group(1))
             i += 1
             cap, i = lookahead_caption(i)
-            blocks.append({"kind": "image", "n": n, "caption": cap})
+            blocks.append({"kind": "image", "n": n, "caption": cap, "href": href})
             continue
 
         # note (blockquote)
@@ -292,8 +295,12 @@ def render_block(b):
         return f'<aside class="note note--{b.get("variant","info")}">{title}<span>{b["text"]}</span></aside>'
     if k == "image":
         cap = f'<figcaption>{esc(b["caption"])}</figcaption>' if b.get("caption") else ""
-        return (f'<figure class="shot"><img src="{img_path(b["n"])}" '
-                f'alt="Slide {b["n"]} screenshot" loading="lazy">{cap}</figure>')
+        img = (f'<img src="{img_path(b["n"])}" '
+               f'alt="Slide {b["n"]} screenshot" loading="lazy">')
+        if b.get("href"):
+            img = (f'<a href="{esc(b["href"])}" target="_blank" rel="noopener" '
+                   f'title="Open {esc(b["href"])}">{img}</a>')
+        return f'<figure class="shot">{img}{cap}</figure>'
     if k == "prose":
         return f'<p class="prose">{b["text"]}</p>'
     if k == "olist":

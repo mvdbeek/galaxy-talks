@@ -142,8 +142,8 @@ shell_command: |
 
 > [!WARN] **Live demo:** “Write a tool that uses ggplot2 to create a boxplot from a tabular file. The user should select a grouping column and a numeric column. Put the R script in a configfile.”
 
-![Slide 99](images/slide-99.png)
-*GalaxyAI (shipped as a FastMCP server) — or Claude / Orbit over MCP + a skill — authors the User-Defined Tool, multi-step, from that one sentence*
+[![Slide 99](images/slide-99.png)](https://test.galaxyproject.org)
+*Click to launch test.galaxyproject.org — GalaxyAI (shipped as a FastMCP server), or Claude / Orbit over MCP + a skill, authors the User-Defined Tool, multi-step, from that one sentence*
 
 ---
 

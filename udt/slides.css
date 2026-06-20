@@ -219,6 +219,11 @@ figure.shot img {
   border: 1px solid var(--border-subtle);
   box-shadow: 0 8px 24px -14px rgba(44,49,67,.5);
 }
+/* clickable screenshot (e.g. launch the live demo) — signal interactivity */
+figure.shot a { display: inline-block; cursor: pointer; }
+figure.shot a img { transition: transform .12s, box-shadow .12s, outline-color .12s; outline: 2px solid transparent; }
+figure.shot a:hover img,
+figure.shot a:focus-visible img { transform: translateY(-2px); box-shadow: 0 16px 34px -12px rgba(44,49,67,.6); outline-color: var(--gold); }
 
 /* Converted documentation text */
 .prose { font-size: 1.1rem; margin: 0; text-wrap: pretty; }

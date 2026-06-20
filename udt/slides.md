@@ -181,10 +181,10 @@ outputs:
 
 ---
 
-## Slide 14: We don’t want 100 bwa tools
+## Slide 14: Good tools should converge, not multiply
 
 - Freedom to create has a failure mode: **duplication**
-- 100 users each build their own slightly-different `bwa` wrapper
+- Imagine 100 users each building their own slightly-different `bwa` wrapper
   - none reviewed, tested, or annotated — and they all drift apart
   - reproducibility and trust quietly erode
 - The fix isn’t to forbid personal tools — it’s to give the good ones a path to **converge**
@@ -249,7 +249,16 @@ $ planemo validate workflow.gxwf.yml
 
 ---
 
-## Slide 20: Coming to a server near you soon! {.closing}
+## Slide 20: Getting access — today and what’s next
+
+- **Access is an administrator decision** — UDTs are enabled per instance, then granted per user or role
+- **Gated for now** — while the feature matures, ask us for access on the public instances
+- **Opening up soon** — broader, more self-serve access is on the way
+- **Bring your own compute** *(in progress)* — run UDTs on compute *you* bring, easing the resource and trust concerns that make some admins cautious
+
+---
+
+## Slide 21: Coming to a server near you soon! {.closing}
 
 ```yaml
 class: GalaxyUserTool

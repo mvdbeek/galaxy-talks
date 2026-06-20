@@ -140,7 +140,7 @@ shell_command: |
 
 ## Slide 11: So let’s not write it by hand
 
-> [!WARN] **Live demo:** “Write a tool that uses ggplot2 to create a boxplot from a tabular file. The user should select a grouping column and a numeric column. Put the R script in a configfile.”
+> [!WARN] **Live demo:** Taking off where the *Galaxy Live* demo ended — let’s plot the treatment groups. “Write a tool that uses ggplot2 to make a boxplot from a tabular file; the user picks a grouping column and a numeric column; put the R script in a configfile.”
 
 [![Slide 99](images/slide-99.png)](https://test.galaxyproject.org)
 *Click to launch test.galaxyproject.org — GalaxyAI (shipped as a FastMCP server), or Claude / Orbit over MCP + a skill, authors the User-Defined Tool, multi-step, from that one sentence*

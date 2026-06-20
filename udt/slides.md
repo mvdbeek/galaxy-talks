@@ -367,7 +367,6 @@ The user-defined tool language is still evolving, and additional safety audits a
 
 Current limitations include:
 
-- configfiles are not supported
 - Access to reference data is not supported
 - Access to metadata and metadata files (such as BAM indexes) is not supported
 - Access to the extra_files directory is not supported
@@ -385,7 +384,7 @@ description: Bring your own gratitude
 container: busybox
 shell_command: |
   echo "Thank you John Chilton, Dannon Baker, Michael Crusoe,
-  Anton Nekrutenko, and the audience at GCC!" > thanks.txt
+  Anton Nekrutenko, Nicola Soranzo and the audience at GCC!" > thanks.txt
 outputs:
   - name: output1
     type: data

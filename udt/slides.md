@@ -44,7 +44,7 @@ marius@galaxyproject.org
 
 ---
 
-## Slide 5: Last year’s answer — User-Defined Tools
+## Slide 5: The answer — User-Defined Tools
 
 ```yaml {hl=8}
 class: GalaxyUserTool

@@ -376,15 +376,33 @@ def build_html(deck_title, slides):
     requestAnimationFrame(() =>
       slides[i].scrollIntoView({{ block: 'center' }}));
   }}
+  function fitSlide(s) {{
+    // shrink a slide's content (via --fit) just enough that it stops
+    // overflowing — so tall code/bullets fit without scrolling. The content
+    // scrolls inside .slide__blocks (max-height:100%), so check that box too.
+    const box = s.querySelector('.slide__blocks') || s.querySelector('.slide__body');
+    const overflows = () =>
+      s.scrollHeight > s.clientHeight + 1 ||
+      (box && box.scrollHeight > box.clientHeight + 1);
+    s.style.setProperty('--fit', '1');
+    let fit = 1, guard = 0;
+    while (overflows() && fit > 0.5 && guard++ < 24) {{
+      fit -= 0.05;
+      s.style.setProperty('--fit', fit.toFixed(2));
+    }}
+  }}
+  function fitAll() {{ if (isPresent()) slides.forEach(fitSlide); }}
+  function unfit() {{ slides.forEach((s) => s.style.removeProperty('--fit')); }}
   function present(on) {{
     if (on) {{
       body.classList.add('present');
       const el = document.documentElement;
       if (el.requestFullscreen) el.requestFullscreen().catch(() => {{}});
-      requestAnimationFrame(() => go(nearest()));
+      requestAnimationFrame(() => {{ fitAll(); go(nearest()); }});
     }} else {{
       const i = nearest();
       body.classList.remove('present');
+      unfit();
       if (document.fullscreenElement) document.exitFullscreen();
       restore(i);
     }}
@@ -396,9 +414,16 @@ def build_html(deck_title, slides):
     if (!document.fullscreenElement && isPresent()) {{
       const i = nearest();
       body.classList.remove('present');
+      unfit();
       restore(i);
     }}
   }});
+  let fitTimer;
+  window.addEventListener('resize', () => {{
+    clearTimeout(fitTimer);
+    fitTimer = setTimeout(fitAll, 150);
+  }});
+  if (document.fonts && document.fonts.ready) document.fonts.ready.then(fitAll);
   document.addEventListener('keydown', (e) => {{
     if (['ArrowRight', 'ArrowDown', 'PageDown', ' '].includes(e.key)) {{ e.preventDefault(); go(nearest() + 1); }}
     else if (['ArrowLeft', 'ArrowUp', 'PageUp'].includes(e.key)) {{ e.preventDefault(); go(nearest() - 1); }}

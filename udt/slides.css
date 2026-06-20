@@ -311,12 +311,17 @@ body.present .slide__num { font-size: clamp(1rem, 1.1vw, 1.7rem); top: 1.5rem; r
 body.present .slide__blocks { overflow: auto; max-height: 100%; }
 /* vw coefficients are tuned so sizes match the original look around a
    ~1500px-wide slide, while the higher caps let text keep scaling up on
-   larger / native (retina) displays instead of stalling at ~1400px. */
-body.present figure.code pre { font-size: clamp(.85rem, 1.38vw, 2.8rem); }
-body.present figure.shot img { max-height: 72vh; }
-body.present .prose, body.present ul.doc, body.present ol.doc { font-size: clamp(1.1rem, 1.7vw, 3.6rem); }
-body.present .slide__body > ul { font-size: clamp(1.3rem, 2.13vw, 4rem); }
-body.present .note { font-size: clamp(1rem, 1.49vw, 3rem); }
+   larger / native (retina) displays instead of stalling at ~1400px.
+   --fit (default 1) is shrunk per-slide by JS so tall content fits without
+   scrolling — see the auto-fit routine in the inline script. */
+body.present .slide { --fit: 1; }
+body.present figure.code pre { font-size: calc(clamp(.85rem, 1.38vw, 2.8rem) * var(--fit)); }
+body.present figure.code figcaption,
+body.present figure.shot figcaption { font-size: calc(clamp(.95rem, 1.05vw, 1.9rem) * var(--fit)); }
+body.present figure.shot img { max-height: calc(72vh * var(--fit)); }
+body.present .prose, body.present ul.doc, body.present ol.doc { font-size: calc(clamp(1.1rem, 1.7vw, 3.6rem) * var(--fit)); }
+body.present .slide__body > ul { font-size: calc(clamp(1.3rem, 2.13vw, 4rem) * var(--fit)); }
+body.present .note { font-size: calc(clamp(1rem, 1.49vw, 3rem) * var(--fit)); }
 body.present .slide__title { font-size: clamp(1.6rem, 2.34vw, 4.6rem); }
 body.present .slide--title .slide__title { font-size: clamp(2.4rem, 3.62vw, 6.5rem); }
 body.present .slide__subtitle { font-size: clamp(1.4rem, 1.6vw, 3.4rem); }

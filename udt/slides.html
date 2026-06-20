@@ -42,7 +42,7 @@
     <h2 class="slide__title">Curation is a strength — good tools make good workflows</h2>
     <div class="slide__blocks">
       <figure class="shot"><img src="images/slide-06.png" alt="Slide 6 screenshot" loading="lazy"><figcaption>galaxyproject/tools-iuc: thousands of carefully reviewed tools — one of Galaxy’s greatest strengths. Trusted, reproducible tools are exactly what make trusted, reproducible workflows.</figcaption></figure>
-      <aside class="note note--info"><span class="note__title">A high bar by design</span><span>and not every need fits it — the one-off, the exploratory, the “I need xyz, right now.” That gap is what user-defined tools fill — *alongside* curation, not instead of it.</span></aside>
+      <aside class="note note--info"><span class="note__title">A high bar by design</span><span>not every need fits it:  one-off, exploratory, “I need xyz, right now.” That gap is what user-defined (glue) tools fill.</span></aside>
     </div>
   </section>
   <section class="slide slide--content" id="slide-5" aria-label="Slide 5">
@@ -177,15 +177,33 @@
     requestAnimationFrame(() =>
       slides[i].scrollIntoView({ block: 'center' }));
   }
+  function fitSlide(s) {
+    // shrink a slide's content (via --fit) just enough that it stops
+    // overflowing — so tall code/bullets fit without scrolling. The content
+    // scrolls inside .slide__blocks (max-height:100%), so check that box too.
+    const box = s.querySelector('.slide__blocks') || s.querySelector('.slide__body');
+    const overflows = () =>
+      s.scrollHeight > s.clientHeight + 1 ||
+      (box && box.scrollHeight > box.clientHeight + 1);
+    s.style.setProperty('--fit', '1');
+    let fit = 1, guard = 0;
+    while (overflows() && fit > 0.5 && guard++ < 24) {
+      fit -= 0.05;
+      s.style.setProperty('--fit', fit.toFixed(2));
+    }
+  }
+  function fitAll() { if (isPresent()) slides.forEach(fitSlide); }
+  function unfit() { slides.forEach((s) => s.style.removeProperty('--fit')); }
   function present(on) {
     if (on) {
       body.classList.add('present');
       const el = document.documentElement;
       if (el.requestFullscreen) el.requestFullscreen().catch(() => {});
-      requestAnimationFrame(() => go(nearest()));
+      requestAnimationFrame(() => { fitAll(); go(nearest()); });
     } else {
       const i = nearest();
       body.classList.remove('present');
+      unfit();
       if (document.fullscreenElement) document.exitFullscreen();
       restore(i);
     }
@@ -197,9 +215,16 @@
     if (!document.fullscreenElement && isPresent()) {
       const i = nearest();
       body.classList.remove('present');
+      unfit();
       restore(i);
     }
   });
+  let fitTimer;
+  window.addEventListener('resize', () => {
+    clearTimeout(fitTimer);
+    fitTimer = setTimeout(fitAll, 150);
+  });
+  if (document.fonts && document.fonts.ready) document.fonts.ready.then(fitAll);
   document.addEventListener('keydown', (e) => {
     if (['ArrowRight', 'ArrowDown', 'PageDown', ' '].includes(e.key)) { e.preventDefault(); go(nearest() + 1); }
     else if (['ArrowLeft', 'ArrowUp', 'PageUp'].includes(e.key)) { e.preventDefault(); go(nearest() - 1); }

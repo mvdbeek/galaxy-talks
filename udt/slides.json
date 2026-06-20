@@ -1,0 +1,201 @@
+[
+ {
+  "n": 1,
+  "type": "title",
+  "title": "Galaxy Tools 2.0",
+  "subtitle": "Bring your own!",
+  "meta": [
+   "Marius van den Beek",
+   "PSU / SCI-SCALE",
+   "marius@galaxyproject.org"
+  ]
+ },
+ {
+  "n": 2,
+  "type": "content",
+  "title": "Why can’t users install tools?",
+  "bullets": [
+   [
+    0,
+    "We don’t want to limit what you can do!"
+   ],
+   [
+    1,
+    "I need “xyz” and it’s not on the server I use, help please?"
+   ],
+   [
+    0,
+    "You can already run code with RStudio and Jupyter*"
+   ],
+   [
+    0,
+    "We can isolate storage and compute"
+   ]
+  ]
+ },
+ {
+  "n": 3,
+  "type": "section",
+  "title": "Why can’t users install tools?",
+  "screenshot": true
+ },
+ {
+  "n": 4,
+  "type": "content",
+  "title": "Templating with Cheetah",
+  "screenshot": true
+ },
+ {
+  "n": 5,
+  "type": "content",
+  "title": "Templating with Cheetah 🎃",
+  "screenshot": true
+ },
+ {
+  "n": 6,
+  "type": "content",
+  "title": "How do we manage 1000s of tools?",
+  "screenshot": true
+ },
+ {
+  "n": 7,
+  "type": "section",
+  "title": "There has to be a better way!",
+  "screenshot": true
+ },
+ {
+  "n": 8,
+  "type": "content",
+  "title": "Javascript expressions & JSON inputs",
+  "screenshot": true
+ },
+ {
+  "n": 9,
+  "type": "content",
+  "title": "Javascript expressions & JSON inputs",
+  "screenshot": true
+ },
+ {
+  "n": 10,
+  "type": "content",
+  "title": "Javascript expressions & JSON inputs",
+  "screenshot": true
+ },
+ {
+  "n": 11,
+  "type": "content",
+  "title": "Javascript expressions & JSON inputs",
+  "screenshot": true
+ },
+ {
+  "n": 12,
+  "type": "content",
+  "title": "Monaco + YAML schemas",
+  "screenshot": true
+ },
+ {
+  "n": 13,
+  "type": "content",
+  "title": "Monaco + Typescript interfaces",
+  "screenshot": true
+ },
+ {
+  "n": 14,
+  "type": "content",
+  "title": "Behind the scenes",
+  "bullets": [
+   [
+    0,
+    "Tool parameters are modeled as Pydantic models"
+   ],
+   [
+    1,
+    "As a general schema that describes “A Galaxy Tool”"
+   ],
+   [
+    1,
+    "As a specialized schema for “This Galaxy Tool’s Potential Input Object”"
+   ],
+   [
+    0,
+    "Pydantic models are transformed to JSON schema"
+   ],
+   [
+    0,
+    "JSON schema is transformed to typescript interface for runtime inputs"
+   ],
+   [
+    0,
+    "Monaco Editor renders tool source"
+   ],
+   [
+    1,
+    "Knows what to do with yaml schema for tool"
+   ],
+   [
+    1,
+    "Understands typescript interface and compares to code in javascript fragments"
+   ]
+  ]
+ },
+ {
+  "n": 15,
+  "type": "section",
+  "title": "Behind the scenes",
+  "screenshot": true
+ },
+ {
+  "n": 16,
+  "type": "content",
+  "title": null,
+  "screenshot": true
+ },
+ {
+  "n": 17,
+  "type": "content",
+  "title": null,
+  "screenshot": true
+ },
+ {
+  "n": 18,
+  "type": "content",
+  "title": null,
+  "screenshot": true
+ },
+ {
+  "n": 19,
+  "type": "content",
+  "title": null,
+  "screenshot": true
+ },
+ {
+  "n": 20,
+  "type": "content",
+  "title": null,
+  "screenshot": true
+ },
+ {
+  "n": 21,
+  "type": "content",
+  "title": null,
+  "screenshot": true
+ },
+ {
+  "n": 22,
+  "type": "content",
+  "title": null,
+  "screenshot": true
+ },
+ {
+  "n": 23,
+  "type": "closing",
+  "title": "Coming to a server near you soon!",
+  "meta": [
+   "Special Thanks to",
+   "John Chilton",
+   "Michael Crusoe",
+   "Nicola Soranzo"
+  ],
+  "screenshot": true
+ }
+]

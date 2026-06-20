@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Galaxy Tools 2.0 — Bring your own!</title>
+<link rel="stylesheet" href="slides.css">
+</head>
+<body>
+<div class="toolbar">
+  <button id="presentBtn" title="Present — press f">&#9974; Present</button>
+</div>
+<header class="deck-header">
+  <h1>Galaxy Tools 2.0 <span>— Bring your own!</span></h1>
+  <p>Marius van den Beek · PSU / SCI-SCALE · marius@galaxyproject.org</p>
+  <p class="hint">Press <kbd>f</kbd> for fullscreen · <kbd>←</kbd> <kbd>→</kbd> to navigate</p>
+</header>
+<main class="deck">
+  <section class="slide slide--title" id="slide-1" aria-label="Slide 1">
+    <span class="slide__num">1 / 23</span>
+    <h2 class="slide__title">Galaxy Tools 2.0</h2>
+    <p class="slide__subtitle">Bring your own!</p>
+    <div class="slide__meta"><p>Marius van den Beek</p><p>PSU / SCI-SCALE</p><p>marius@galaxyproject.org</p></div>
+  </section>
+  <section class="slide slide--content" id="slide-2" aria-label="Slide 2">
+    <span class="slide__num">2 / 23</span>
+    <h2 class="slide__title">Why can’t users install tools?</h2>
+    <div class="slide__body"><ul><li>We don’t want to limit what you can do!<ul><li>I need “xyz” and it’s not on the server I use, help please?</li></ul></li><li>You can already run code with RStudio and Jupyter*</li><li>We can isolate storage and compute</li></ul></div>
+  </section>
+  <section class="slide slide--section" id="slide-3" aria-label="Slide 3">
+    <span class="slide__num">3 / 23</span>
+    <h2 class="slide__title">Why can’t users install tools?</h2>
+  </section>
+  <section class="slide slide--content" id="slide-4" aria-label="Slide 4">
+    <span class="slide__num">4 / 23</span>
+    <h2 class="slide__title">Templating with Cheetah</h2>
+    <div class="slide__blocks">
+      <figure class="code"><pre class="language-xml"><code><span class="line"><span class="ln">1</span><span class="lc">&lt;tool id=&quot;cat&quot; version=&quot;0.1&quot;&gt;</span></span><span class="line"><span class="ln">2</span><span class="lc">    &lt;description&gt;tail-to-head&lt;/description&gt;</span></span><span class="line"><span class="ln">3</span><span class="lc">    &lt;requirements&gt;</span></span><span class="line"><span class="ln">4</span><span class="lc">        &lt;requirement type=&quot;container&quot;&gt;busybox&lt;/requirement&gt;</span></span><span class="line"><span class="ln">5</span><span class="lc">    &lt;/requirements&gt;</span></span><span class="line"><span class="ln">6</span><span class="lc">    &lt;command&gt;&lt;![CDATA[</span></span><span class="line"><span class="ln">7</span><span class="lc">cat</span></span><span class="line hl"><span class="ln">8</span><span class="lc">#for dataset in datasets:</span></span><span class="line hl"><span class="ln">9</span><span class="lc">    &#x27;$dataset&#x27;</span></span><span class="line hl"><span class="ln">10</span><span class="lc">#end for</span></span><span class="line"><span class="ln">11</span><span class="lc">&gt; &#x27;$output1&#x27;</span></span><span class="line"><span class="ln">12</span><span class="lc">    ]]&gt;&lt;/command&gt;</span></span><span class="line"><span class="ln">13</span><span class="lc">    &lt;inputs&gt;</span></span><span class="line"><span class="ln">14</span><span class="lc">        &lt;input name=&quot;datasets&quot; format=&quot;data&quot; type=&quot;data&quot; multiple=&quot;true&quot;/&gt;</span></span><span class="line"><span class="ln">15</span><span class="lc">    &lt;/inputs&gt;</span></span><span class="line"><span class="ln">16</span><span class="lc">    &lt;outputs&gt;</span></span><span class="line"><span class="ln">17</span><span class="lc">        &lt;output name=&quot;output1&quot; format_source=&quot;datasets&quot; /&gt;</span></span><span class="line"><span class="ln">18</span><span class="lc">    &lt;/outputs&gt;</span></span><span class="line"><span class="ln">19</span><span class="lc">&lt;/tool&gt;</span></span></code></pre><figcaption>Classic Galaxy tool — Cheetah loop over inputs</figcaption></figure>
+    </div>
+  </section>
+  <section class="slide slide--content" id="slide-5" aria-label="Slide 5">
+    <span class="slide__num">5 / 23</span>
+    <h2 class="slide__title">Templating with Cheetah 🎃</h2>
+    <div class="slide__blocks">
+      <aside class="note note--warn"><span class="note__title">The catch</span><span>Cheetah templates are evaluated as <strong>arbitrary Python</strong> while the job command is built — so a tool author can read the database, touch the filesystem, do anything. That’s exactly why users can’t be allowed to install tools.</span></aside>
+      <figure class="code"><pre class="language-xml"><code><span class="line"><span class="ln">1</span><span class="lc">&lt;command&gt;&lt;![CDATA[</span></span><span class="line hl"><span class="ln">2</span><span class="lc">    #from pathlib import Path</span></span><span class="line hl"><span class="ln">3</span><span class="lc">    #user_id = $__app__.model.session().query($__app__.model.User.id).one()</span></span><span class="line hl"><span class="ln">4</span><span class="lc">    #open(f&quot;{Path.home()}/a_file&quot;, &quot;w&quot;).write(&quot;Hello!&quot;)</span></span><span class="line"><span class="ln">5</span><span class="lc">]]&gt;&lt;/command&gt;</span></span></code></pre><figcaption>Nothing stops a template from running this</figcaption></figure>
+    </div>
+  </section>
+  <section class="slide slide--content" id="slide-6" aria-label="Slide 6">
+    <span class="slide__num">6 / 23</span>
+    <h2 class="slide__title">How do we manage 1000s of tools?</h2>
+    <div class="slide__blocks">
+      <figure class="shot"><img src="images/slide-06.png" alt="Slide 6 screenshot" loading="lazy"><figcaption>galaxyproject/tools-iuc — 337 open / 5,450 closed pull requests. Every tool is hand-curated and reviewed.</figcaption></figure>
+    </div>
+  </section>
+  <section class="slide slide--section" id="slide-7" aria-label="Slide 7">
+    <span class="slide__num">7 / 23</span>
+    <h2 class="slide__title">There has to be a better way!</h2>
+  </section>
+  <section class="slide slide--content" id="slide-8" aria-label="Slide 8">
+    <span class="slide__num">8 / 23</span>
+    <h2 class="slide__title">Javascript expressions &amp; JSON inputs</h2>
+    <div class="slide__blocks">
+      <figure class="code"><pre class="language-yaml"><code><span class="line"><span class="ln">1</span><span class="lc">class: GalaxyUserTool</span></span><span class="line"><span class="ln">2</span><span class="lc">id: cat_user_defined</span></span><span class="line"><span class="ln">3</span><span class="lc">version: &quot;0.1&quot;</span></span><span class="line"><span class="ln">4</span><span class="lc">name: Concatenate Files</span></span><span class="line"><span class="ln">5</span><span class="lc">description: tail-to-head</span></span><span class="line"><span class="ln">6</span><span class="lc">container: busybox</span></span><span class="line"><span class="ln">7</span><span class="lc">shell_command: |</span></span><span class="line hl"><span class="ln">8</span><span class="lc">  cat $(inputs.datasets.map((input) =&gt; input.path).join(&#x27; &#x27;)) &gt; output.txt</span></span><span class="line"><span class="ln">9</span><span class="lc">inputs:</span></span><span class="line"><span class="ln">10</span><span class="lc">  - name: datasets</span></span><span class="line"><span class="ln">11</span><span class="lc">    multiple: true</span></span><span class="line"><span class="ln">12</span><span class="lc">    type: data</span></span><span class="line"><span class="ln">13</span><span class="lc">outputs:</span></span><span class="line"><span class="ln">14</span><span class="lc">  - name: output1</span></span><span class="line"><span class="ln">15</span><span class="lc">    type: data</span></span><span class="line"><span class="ln">16</span><span class="lc">    format_source: datasets</span></span><span class="line"><span class="ln">17</span><span class="lc">    from_work_dir: output.txt</span></span></code></pre><figcaption>A user-defined tool — values come from a sandboxed JS expression</figcaption></figure>
+    </div>
+  </section>
+  <section class="slide slide--content" id="slide-9" aria-label="Slide 9">
+    <span class="slide__num">9 / 23</span>
+    <h2 class="slide__title">Javascript expressions &amp; JSON inputs</h2>
+    <div class="slide__blocks">
+      <figure class="code"><pre class="language-yaml"><code><span class="line"><span class="ln">1</span><span class="lc">class: GalaxyUserTool</span></span><span class="line"><span class="ln">2</span><span class="lc">id: cat_user_defined</span></span><span class="line"><span class="ln">3</span><span class="lc">version: &quot;0.1&quot;</span></span><span class="line"><span class="ln">4</span><span class="lc">name: Concatenate Files</span></span><span class="line"><span class="ln">5</span><span class="lc">description: tail-to-head</span></span><span class="line"><span class="ln">6</span><span class="lc">container: busybox</span></span><span class="line"><span class="ln">7</span><span class="lc">shell_command: |</span></span><span class="line"><span class="ln">8</span><span class="lc">  cat $(inputs.datasets.map((input) =&gt; input.path).join(&#x27; &#x27;)) &gt; output.txt</span></span><span class="line"><span class="ln">9</span><span class="lc">inputs:</span></span><span class="line"><span class="ln">10</span><span class="lc">  - name: datasets</span></span><span class="line"><span class="ln">11</span><span class="lc">    multiple: true</span></span><span class="line"><span class="ln">12</span><span class="lc">    type: data</span></span><span class="line"><span class="ln">13</span><span class="lc">outputs:</span></span><span class="line"><span class="ln">14</span><span class="lc">  - name: output1</span></span><span class="line"><span class="ln">15</span><span class="lc">    type: data</span></span><span class="line"><span class="ln">16</span><span class="lc">    format_source: datasets</span></span><span class="line"><span class="ln">17</span><span class="lc">    from_work_dir: output.txt</span></span></code></pre><figcaption>Tool definition</figcaption></figure>
+      <figure class="code"><pre class="language-javascript"><code><span class="line"><span class="ln">1</span><span class="lc">var inputs = {</span></span><span class="line"><span class="ln">2</span><span class="lc">    &quot;datasets&quot;: [</span></span><span class="line"><span class="ln">3</span><span class="lc">        {</span></span><span class="line"><span class="ln">4</span><span class="lc">            &quot;class&quot;: &quot;File&quot;,</span></span><span class="line"><span class="ln">5</span><span class="lc">            &quot;location&quot;: &quot;step_input://1&quot;,</span></span><span class="line"><span class="ln">6</span><span class="lc">            &quot;format&quot;: &quot;csv&quot;,</span></span><span class="line"><span class="ln">7</span><span class="lc">            &quot;path&quot;: &quot;/Users/mvandenb/src/galaxy/databa…&quot;,</span></span><span class="line"><span class="ln">8</span><span class="lc">            &quot;basename&quot;: &quot;markers.csv&quot;,</span></span><span class="line"><span class="ln">9</span><span class="lc">            &quot;nameroot&quot;: &quot;markers&quot;,</span></span><span class="line"><span class="ln">10</span><span class="lc">            &quot;nameext&quot;: &quot;.csv&quot;</span></span><span class="line"><span class="ln">11</span><span class="lc">        }</span></span><span class="line"><span class="ln">12</span><span class="lc">    ],</span></span><span class="line"><span class="ln">13</span><span class="lc">    &quot;chromInfo&quot;: &quot;/tmp/shared/ucsc/chrom/?.len&quot;,</span></span><span class="line"><span class="ln">14</span><span class="lc">    &quot;dbkey&quot;: &quot;?&quot;,</span></span><span class="line"><span class="ln">15</span><span class="lc">    &quot;__input_ext&quot;: &quot;input&quot;</span></span><span class="line"><span class="ln">16</span><span class="lc">};</span></span></code></pre><figcaption>The inputs object the expression evaluates against (path truncated)</figcaption></figure>
+    </div>
+  </section>
+  <section class="slide slide--content" id="slide-10" aria-label="Slide 10">
+    <span class="slide__num">10 / 23</span>
+    <h2 class="slide__title">Javascript expressions &amp; JSON inputs</h2>
+    <div class="slide__blocks">
+      <figure class="code"><pre class="language-yaml"><code><span class="line"><span class="ln">1</span><span class="lc">class: GalaxyUserTool</span></span><span class="line"><span class="ln">2</span><span class="lc">id: cat_user_defined</span></span><span class="line"><span class="ln">3</span><span class="lc">version: &quot;0.1&quot;</span></span><span class="line"><span class="ln">4</span><span class="lc">name: Concatenate Files</span></span><span class="line"><span class="ln">5</span><span class="lc">description: tail-to-head</span></span><span class="line"><span class="ln">6</span><span class="lc">container: busybox</span></span><span class="line"><span class="ln">7</span><span class="lc">shell_command: |</span></span><span class="line"><span class="ln">8</span><span class="lc">  cat $(inputs.datasets.map((input) =&gt; input.path).join(&#x27; &#x27;)) &gt; output.txt</span></span><span class="line"><span class="ln">9</span><span class="lc">inputs:</span></span><span class="line"><span class="ln">10</span><span class="lc">  - name: datasets</span></span><span class="line"><span class="ln">11</span><span class="lc">    multiple: true</span></span><span class="line"><span class="ln">12</span><span class="lc">    type: data</span></span><span class="line"><span class="ln">13</span><span class="lc">outputs:</span></span><span class="line"><span class="ln">14</span><span class="lc">  - name: output1</span></span><span class="line"><span class="ln">15</span><span class="lc">    type: data</span></span><span class="line"><span class="ln">16</span><span class="lc">    format_source: datasets</span></span><span class="line"><span class="ln">17</span><span class="lc">    from_work_dir: output.txt</span></span></code></pre><figcaption>Tool Editor</figcaption></figure>
+      <aside class="note note--info"><span class="note__title">Autocomplete</span><span>In the editor, Monaco knows the inferred type of <code>input</code> inside the expression and offers autocomplete:</span></aside>
+      <figure class="code"><pre class="language-typescript"><code><span class="line"><span class="ln">1</span><span class="lc">(parameter) input: {</span></span><span class="line"><span class="ln">2</span><span class="lc">    readonly class: &quot;File&quot;;</span></span><span class="line"><span class="ln">3</span><span class="lc">    readonly basename: string;</span></span><span class="line"><span class="ln">4</span><span class="lc">    readonly location: string;</span></span><span class="line"><span class="ln">5</span><span class="lc">    readonly path: string;</span></span><span class="line"><span class="ln">6</span><span class="lc">    readonly listing: readonly string[] | null;</span></span><span class="line"><span class="ln">7</span><span class="lc">    readonly nameroot: string | null;</span></span><span class="line"><span class="ln">8</span><span class="lc">    readonly nameext: string | null;</span></span><span class="line"><span class="ln">9</span><span class="lc">    readonly checksum: string | null;</span></span><span class="line"><span class="ln">10</span><span class="lc">    readonly size: number;</span></span><span class="line"><span class="ln">11</span><span class="lc">}</span></span></code></pre></figure>
+      <figure class="shot"><img src="images/slide-10.png" alt="Slide 10 screenshot" loading="lazy"><figcaption>The live Tool Editor showing the autocomplete popup</figcaption></figure>
+    </div>
+  </section>
+  <section class="slide slide--content" id="slide-11" aria-label="Slide 11">
+    <span class="slide__num">11 / 23</span>
+    <h2 class="slide__title">Javascript expressions &amp; JSON inputs</h2>
+    <div class="slide__blocks">
+      <aside class="note note--info"><span>Same view as the previous slide (presenter build step).</span></aside>
+      <figure class="shot"><img src="images/slide-11.png" alt="Slide 11 screenshot" loading="lazy"><figcaption>Tool Editor with type-aware autocomplete</figcaption></figure>
+    </div>
+  </section>
+  <section class="slide slide--content" id="slide-12" aria-label="Slide 12">
+    <span class="slide__num">12 / 23</span>
+    <h2 class="slide__title">Monaco + YAML schemas</h2>
+    <div class="slide__blocks">
+      <aside class="note note--info"><span class="note__title">Hover docs</span><span>Hovering a property in the YAML surfaces documentation pulled from the schema:</span></aside>
+      <figure class="code"><pre class="language-text"><code><span class="line"><span class="ln">1</span><span class="lc">(property) path: string</span></span><span class="line"><span class="ln">2</span><span class="lc">Path</span></span><span class="line"><span class="ln">3</span><span class="lc">@description — The absolute path to the file on disk.</span></span></code></pre></figure>
+      <figure class="shot"><img src="images/slide-12.png" alt="Slide 12 screenshot" loading="lazy"><figcaption>Monaco hover tooltip driven by the YAML schema</figcaption></figure>
+    </div>
+  </section>
+  <section class="slide slide--content" id="slide-13" aria-label="Slide 13">
+    <span class="slide__num">13 / 23</span>
+    <h2 class="slide__title">Monaco + Typescript interfaces</h2>
+    <div class="slide__blocks">
+      <aside class="note note--warn"><span class="note__title">Type checking</span><span>Typos in the expression are caught as real TypeScript errors, with suggestions:</span></aside>
+      <figure class="code"><pre class="language-text"><code><span class="line"><span class="ln">1</span><span class="lc">Property &#x27;datsets&#x27; does not exist on type &#x27;{ readonly datasets: readonly</span></span><span class="line"><span class="ln">2</span><span class="lc">{ readonly class: &quot;File&quot;; readonly basename: string; readonly location:</span></span><span class="line"><span class="ln">3</span><span class="lc">string; readonly path: string; readonly listing: readonly string[] |</span></span><span class="line"><span class="ln">4</span><span class="lc">null; readonly nameroot: string | null; readonly nameext: string | null;</span></span><span class="line"><span class="ln">5</span><span class="lc">readonly checksum: string | null; readonly size: number; }[]; }&#x27;.</span></span><span class="line"><span class="ln">6</span><span class="lc">Did you mean &#x27;datasets&#x27;?</span></span></code></pre></figure>
+      <figure class="shot"><img src="images/slide-13.png" alt="Slide 13 screenshot" loading="lazy"><figcaption>TypeScript error shown inline in the Tool Editor</figcaption></figure>
+    </div>
+  </section>
+  <section class="slide slide--content" id="slide-14" aria-label="Slide 14">
+    <span class="slide__num">14 / 23</span>
+    <h2 class="slide__title">Behind the scenes</h2>
+    <div class="slide__body"><ul><li>Tool parameters are modeled as Pydantic models<ul><li>As a general schema that describes “A Galaxy Tool”</li><li>As a specialized schema for “This Galaxy Tool’s Potential Input Object”</li></ul></li><li>Pydantic models are transformed to JSON schema</li><li>JSON schema is transformed to a TypeScript interface for runtime inputs</li><li>Monaco Editor renders the tool source<ul><li>Knows what to do with the YAML schema for the tool</li><li>Understands the TypeScript interface and compares it to the code in JavaScript fragments</li></ul></li></ul></div>
+  </section>
+  <section class="slide slide--section" id="slide-15" aria-label="Slide 15">
+    <span class="slide__num">15 / 23</span>
+    <h2 class="slide__title">Behind the scenes</h2>
+  </section>
+  <section class="slide slide--content" id="slide-16" aria-label="Slide 16">
+    <span class="slide__num">16 / 23</span>
+    <h2 class="slide__title">Generated JSON schema — inputs</h2>
+    <div class="slide__blocks">
+      <figure class="code"><pre class="language-json"><code><span class="line"><span class="ln">1</span><span class="lc">&quot;inputs&quot;: {</span></span><span class="line"><span class="ln">2</span><span class="lc">    &quot;additionalProperties&quot;: false,</span></span><span class="line"><span class="ln">3</span><span class="lc">    &quot;properties&quot;: {</span></span><span class="line"><span class="ln">4</span><span class="lc">        &quot;datasets&quot;: {</span></span><span class="line"><span class="ln">5</span><span class="lc">            &quot;items&quot;: {</span></span><span class="line"><span class="ln">6</span><span class="lc">                &quot;$ref&quot;: &quot;#/components/schemas/DataInternalJson&quot;</span></span><span class="line"><span class="ln">7</span><span class="lc">            },</span></span><span class="line"><span class="ln">8</span><span class="lc">            &quot;title&quot;: &quot;Datasets&quot;,</span></span><span class="line"><span class="ln">9</span><span class="lc">            &quot;type&quot;: &quot;array&quot;</span></span><span class="line"><span class="ln">10</span><span class="lc">        }</span></span><span class="line"><span class="ln">11</span><span class="lc">    },</span></span><span class="line"><span class="ln">12</span><span class="lc">    &quot;required&quot;: [</span></span><span class="line"><span class="ln">13</span><span class="lc">        &quot;datasets&quot;</span></span><span class="line"><span class="ln">14</span><span class="lc">    ],</span></span></code></pre><figcaption>Top-level inputs schema (excerpt)</figcaption></figure>
+    </div>
+  </section>
+  <section class="slide slide--content" id="slide-17" aria-label="Slide 17">
+    <span class="slide__num">17 / 23</span>
+    <h2 class="slide__title">Generated JSON schema — inputs</h2>
+    <div class="slide__blocks">
+      <aside class="note note--info"><span>Same schema as the previous slide (presenter build step).</span></aside>
+      <figure class="code"><pre class="language-json"><code><span class="line"><span class="ln">1</span><span class="lc">&quot;inputs&quot;: {</span></span><span class="line"><span class="ln">2</span><span class="lc">    &quot;additionalProperties&quot;: false,</span></span><span class="line"><span class="ln">3</span><span class="lc">    &quot;properties&quot;: {</span></span><span class="line"><span class="ln">4</span><span class="lc">        &quot;datasets&quot;: {</span></span><span class="line"><span class="ln">5</span><span class="lc">            &quot;items&quot;: {</span></span><span class="line"><span class="ln">6</span><span class="lc">                &quot;$ref&quot;: &quot;#/components/schemas/DataInternalJson&quot;</span></span><span class="line"><span class="ln">7</span><span class="lc">            },</span></span><span class="line"><span class="ln">8</span><span class="lc">            &quot;title&quot;: &quot;Datasets&quot;,</span></span><span class="line"><span class="ln">9</span><span class="lc">            &quot;type&quot;: &quot;array&quot;</span></span><span class="line"><span class="ln">10</span><span class="lc">        }</span></span><span class="line"><span class="ln">11</span><span class="lc">    },</span></span><span class="line"><span class="ln">12</span><span class="lc">    &quot;required&quot;: [</span></span><span class="line"><span class="ln">13</span><span class="lc">        &quot;datasets&quot;</span></span><span class="line"><span class="ln">14</span><span class="lc">    ],</span></span></code></pre><figcaption>Top-level inputs schema (excerpt)</figcaption></figure>
+    </div>
+  </section>
+  <section class="slide slide--content" id="slide-18" aria-label="Slide 18">
+    <span class="slide__num">18 / 23</span>
+    <h2 class="slide__title">Generated JSON schema — DataInternalJson</h2>
+    <div class="slide__blocks">
+      <figure class="code"><pre class="language-json"><code><span class="line"><span class="ln">1</span><span class="lc">&quot;DataInternalJson&quot;: {</span></span><span class="line"><span class="ln">2</span><span class="lc">    &quot;additionalProperties&quot;: false,</span></span><span class="line"><span class="ln">3</span><span class="lc">    &quot;properties&quot;: {</span></span><span class="line"><span class="ln">4</span><span class="lc">        &quot;class&quot;: {</span></span><span class="line"><span class="ln">5</span><span class="lc">            &quot;const&quot;: &quot;File&quot;,</span></span><span class="line"><span class="ln">6</span><span class="lc">            &quot;title&quot;: &quot;Class&quot;,</span></span><span class="line"><span class="ln">7</span><span class="lc">            &quot;type&quot;: &quot;string&quot;</span></span><span class="line"><span class="ln">8</span><span class="lc">        },</span></span><span class="line"><span class="ln">9</span><span class="lc">        &quot;basename&quot;: {</span></span><span class="line"><span class="ln">10</span><span class="lc">            &quot;description&quot;: &quot;The base name of the file, that is, the nam…&quot;,</span></span><span class="line"><span class="ln">11</span><span class="lc">            &quot;title&quot;: &quot;Basename&quot;,</span></span><span class="line"><span class="ln">12</span><span class="lc">            &quot;type&quot;: &quot;string&quot;</span></span><span class="line"><span class="ln">13</span><span class="lc">        },</span></span><span class="line"><span class="ln">14</span><span class="lc">        &quot;location&quot;: {</span></span><span class="line"><span class="ln">15</span><span class="lc">            &quot;title&quot;: &quot;Location&quot;,</span></span><span class="line"><span class="ln">16</span><span class="lc">            &quot;type&quot;: &quot;string&quot;</span></span><span class="line"><span class="ln">17</span><span class="lc">        },</span></span><span class="line"><span class="ln">18</span><span class="lc">        &quot;path&quot;: {</span></span><span class="line"><span class="ln">19</span><span class="lc">            &quot;description&quot;: &quot;The absolute path to the file on disk.&quot;,</span></span><span class="line"><span class="ln">20</span><span class="lc">            &quot;title&quot;: &quot;Path&quot;,</span></span><span class="line"><span class="ln">21</span><span class="lc">            &quot;type&quot;: &quot;string&quot;</span></span><span class="line"><span class="ln">22</span><span class="lc">        },</span></span><span class="line"><span class="ln">23</span><span class="lc">    }</span></span><span class="line"><span class="ln">24</span><span class="lc">}</span></span></code></pre><figcaption>The File schema referenced by inputs (excerpt; some descriptions truncated)</figcaption></figure>
+    </div>
+  </section>
+  <section class="slide slide--content" id="slide-19" aria-label="Slide 19">
+    <span class="slide__num">19 / 23</span>
+    <h2 class="slide__title">Enabling User-Defined Tools</h2>
+    <div class="slide__blocks">
+      <aside class="note note--info"><span>To enable this feature:</span></aside>
+      <ol class="doc"><li>Set <code>enable_beta_tool_formats: true</code> in your Galaxy configuration.</li><li>Create a role of type <code>Custom Tool Execution</code> in the admin user interface.</li><li>Assign users or groups to this role.</li></ol>
+    </div>
+  </section>
+  <section class="slide slide--content" id="slide-20" aria-label="Slide 20">
+    <span class="slide__num">20 / 23</span>
+    <h2 class="slide__title">Sharing User-Defined Tools</h2>
+    <div class="slide__blocks">
+      <p class="prose">User-defined tools are private to their creators. However, if a tool is embedded in a workflow, any user who imports that workflow will automatically have the tool created in their account.</p>
+      <p class="prose">These tools can also be exported to disk and loaded like regular tools, enabling instance-wide availability if needed.</p>
+    </div>
+  </section>
+  <section class="slide slide--content" id="slide-21" aria-label="Slide 21">
+    <span class="slide__num">21 / 23</span>
+    <h2 class="slide__title">Sharing User-Defined Tools</h2>
+    <div class="slide__blocks">
+      <aside class="note note--info"><span>Same content as the previous slide (presenter build step).</span></aside>
+      <p class="prose">User-defined tools are private to their creators. However, if a tool is embedded in a workflow, any user who imports that workflow will automatically have the tool created in their account.</p>
+      <p class="prose">These tools can also be exported to disk and loaded like regular tools, enabling instance-wide availability if needed.</p>
+    </div>
+  </section>
+  <section class="slide slide--content" id="slide-22" aria-label="Slide 22">
+    <span class="slide__num">22 / 23</span>
+    <h2 class="slide__title">Limitations</h2>
+    <div class="slide__blocks">
+      <p class="prose">The user-defined tool language is still evolving, and additional safety audits are ongoing.</p>
+      <p class="prose">Current limitations include:</p>
+      <ul class="doc"><li><code>configfiles</code> are not supported</li><li>Access to reference data is not supported</li><li>Access to metadata and metadata files (such as BAM indexes) is not supported</li><li>Access to the <code>extra_files</code> directory is not supported</li></ul>
+    </div>
+  </section>
+  <section class="slide slide--closing" id="slide-23" aria-label="Slide 23">
+    <span class="slide__num">23 / 23</span>
+    <h2 class="slide__title">Coming to a server near you soon!</h2>
+    <div class="slide__blocks">
+      <figure class="code"><pre class="language-yaml"><code><span class="line"><span class="ln">1</span><span class="lc">class: GalaxyUserTool</span></span><span class="line"><span class="ln">2</span><span class="lc">id: thank-you</span></span><span class="line"><span class="ln">3</span><span class="lc">version: &quot;1.0&quot;</span></span><span class="line"><span class="ln">4</span><span class="lc">name: Thank You!</span></span><span class="line"><span class="ln">5</span><span class="lc">description: Bring your own gratitude</span></span><span class="line"><span class="ln">6</span><span class="lc">container: busybox</span></span><span class="line"><span class="ln">7</span><span class="lc">shell_command: |</span></span><span class="line"><span class="ln">8</span><span class="lc">  echo &quot;Thank you John Chilton, Dannon Baker, Michael Crusoe,</span></span><span class="line"><span class="ln">9</span><span class="lc">  Anton Nekrutenko, and the audience at GCC!&quot; &gt; thanks.txt</span></span><span class="line"><span class="ln">10</span><span class="lc">outputs:</span></span><span class="line"><span class="ln">11</span><span class="lc">  - name: output1</span></span><span class="line"><span class="ln">12</span><span class="lc">    type: data</span></span><span class="line"><span class="ln">13</span><span class="lc">    from_work_dir: thanks.txt</span></span></code></pre><figcaption>One last user-defined tool</figcaption></figure>
+    </div>
+    <div class="slide__meta"><p>With gratitude 💜</p></div>
+  </section>
+</main>
+<script>
+(function () {
+  const slides = Array.from(document.querySelectorAll('.slide'));
+  const body = document.body;
+  const isPresent = () => body.classList.contains('present');
+  function nearest() {
+    let best = 0, bd = Infinity;
+    slides.forEach((s, idx) => {
+      const d = Math.abs(s.getBoundingClientRect().top);
+      if (d < bd) { bd = d; best = idx; }
+    });
+    return best;
+  }
+  function go(n) {
+    const i = Math.max(0, Math.min(slides.length - 1, n));
+    slides[i].scrollIntoView({ behavior: 'smooth', block: 'start' });
+  }
+  function present(on) {
+    if (on) {
+      body.classList.add('present');
+      const el = document.documentElement;
+      if (el.requestFullscreen) el.requestFullscreen().catch(() => {});
+      requestAnimationFrame(() => go(nearest()));
+    } else {
+      body.classList.remove('present');
+      if (document.fullscreenElement) document.exitFullscreen();
+    }
+  }
+  document.getElementById('presentBtn')
+    .addEventListener('click', () => present(!isPresent()));
+  document.addEventListener('fullscreenchange', () => {
+    if (!document.fullscreenElement) body.classList.remove('present');
+  });
+  document.addEventListener('keydown', (e) => {
+    if (['ArrowRight', 'ArrowDown', 'PageDown', ' '].includes(e.key)) { e.preventDefault(); go(nearest() + 1); }
+    else if (['ArrowLeft', 'ArrowUp', 'PageUp'].includes(e.key)) { e.preventDefault(); go(nearest() - 1); }
+    else if (e.key === 'f' || e.key === 'F') { present(!isPresent()); }
+    else if (e.key === 'Home') { e.preventDefault(); go(0); }
+    else if (e.key === 'End') { e.preventDefault(); go(slides.length - 1); }
+  });
+})();
+</script>
+</body>
+</html>

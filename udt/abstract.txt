@@ -1,0 +1,10 @@
+User-Defined Tools: From LLM-Generated Analysis to Reproducible, Validatable Workflows
+--------------------------------------------------------------------------------------
+
+Last year's introduction of User-Defined Tools provided Galaxy users with a framework to create their own tools using JavaScript expressions and JSON inputs, bypassing the traditional XML tool language and its lengthy review process. By leveraging Pydantic models, JSON Schema, and Monaco editor integration, users gained a streamlined, safe path to extending Galaxy's capabilities on the fly.
+
+This talk expands on that foundation in two directions. First, it addresses the rise of LLM-generated analysis code. Large language models are increasingly used to produce one-off scripts and workflow fragments, but these outputs are typically ephemeral and difficult to reproduce. User-defined tools offer a natural packaging format for LLM-generated code: they provide structured inputs, typed parameters, and containerized execution, turning throwaway snippets into reusable, recomputable components that can be embedded in Galaxy workflows.
+
+Second, the talk presents a graduated path from personal user-defined tools to community-shared best-practice tools. This includes mechanisms for promoting a user-defined tool through stages of peer review, testing, and annotation until it reaches the status of a curated community tool — without requiring the full overhead of the traditional IUC toolshed review process. The goal is to lower the barrier for contributions while preserving quality.
+
+Finally, the talk discusses how the typed, schema-driven nature of user-defined tools enables end-to-end workflow validation independent of the Galaxy runtime. Because tool inputs and outputs are formally described, workflows composed of these tools can be checked for type correctness, parameter compatibility, and structural soundness as static artifacts — making them portable and verifiable across platforms.

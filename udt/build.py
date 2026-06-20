@@ -38,8 +38,8 @@ Markdown dialect (plain Markdown + a few lightweight conventions):
 
   plain paragraph                 prose.
 
-Inline `code` and **bold** are converted to <code>/<strong> in notes, prose,
-lists and bullets.
+Inline `code`, **bold** and *italic* are converted to <code>/<strong>/<em>
+in notes, prose, lists and bullets.
 """
 import html
 import re
@@ -48,6 +48,10 @@ import re
 def inline(t):
     t = html.escape(t, quote=False)
     t = re.sub(r"\*\*(.+?)\*\*", r"<strong>\1</strong>", t)
+    # single-asterisk italics — runs after bold (no ** left) and is fenced to
+    # one text run: content may not contain *, < or > (so it can't span tags
+    # or pair with a stray * inside inline code), and can't open on a space.
+    t = re.sub(r"\*(?!\s)([^*<>]+?)\*", r"<em>\1</em>", t)
     t = re.sub(r"`(.+?)`", r"<code>\1</code>", t)
     return t
 

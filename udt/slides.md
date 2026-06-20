@@ -240,7 +240,7 @@ description: Bring your own gratitude
 container: busybox
 shell_command: |
   echo "Thank you John Chilton, Dannon Baker, Michael Crusoe,
-  Nicola Soranzo, Anton Nekrutenko, and the audience at GCC!" > thanks.txt
+  Nicola Soranzo, Nate Coraor, Anton Nekrutenko, and the audience at GCC!" > thanks.txt
 outputs:
   - name: output1
     type: data

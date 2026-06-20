@@ -6,7 +6,7 @@
 
 ## Slide 1: User-Defined Tools {.title}
 
-**Bring your own!**
+**Bring your own Tool!**
 
 From throwaway LLM code → reproducible, validatable workflows
 
@@ -44,7 +44,7 @@ Lower the barrier, grow the community — Accessible · Reproducible · Transpar
 ![Slide 6](images/slide-06.png)
 *galaxyproject/tools-iuc: thousands of carefully reviewed tools — one of Galaxy’s greatest strengths. Trusted, reproducible tools are exactly what make trusted, reproducible workflows.*
 
-> **A high bar by design:** not every need fits it:  one-off, exploratory, “I need xyz, right now.” That gap is what user-defined (glue) tools fill.
+> **A high bar by design:** not every need fits it: one-off, exploratory, “I have a labmeeting tomorrow.”
 
 ---
 
@@ -77,7 +77,7 @@ inputs:
 outputs:
   - {name: plot, type: data, format: pdf, from_work_dir: boxplot.pdf}
 ```
-*Anatomy of a User-Defined Tool: typed inputs, a pinned container, and the R script itself in a `configfile` — safe to build and run yourself, no XML and no arbitrary Python. For the personal and the exploratory; curated tools stay the backbone. (Our running example.)*
+*Anatomy of a User-Defined Tool: typed inputs, a pinned container, and the R script itself in a `configfile` — safe to build and run. For the personal and the exploratory; curated tools stay the backbone.*
 
 ---
 
@@ -92,13 +92,14 @@ outputs:
 
 ## Slide 7: Why we built this — iterate against the real thing
 
-- Building a fully curated tool is thorough — write XML, build a container, open a PR, review — the right bar for a production tool, but a lot to go through just to find out *“is this even the tool I want?”*
-- User-defined tools turn that into a live loop, right where your data is:
+- Getting a tool (update) out is hard: write XML, build a container, open PR, wait for review
+  - necessary for community production tools, a lot of work to answer “is this even the tool I want?”
+- User-defined tools turn that into an interactive loop, where your data is:
   - **Is this even the tool I want?** — try it, look at the output, change it
   - **Get the first shot right** — a tight edit → run → inspect cycle
   - **Test against real resources** — real datasets and real compute: GPUs, more memory, the cluster it’ll actually run on
-- Humans need this — and agents and LLMs need it even more
-  - try → run → inspect → fix is exactly how an agent converges on a tool that works
+- Humans need this, agents need it even more
+  - try → run → inspect → fix -> repeat
 
 ---
 
@@ -127,9 +128,9 @@ shell_command: |
 
 ## Slide 10: LLMs write great throwaway code
 
-- Everyone is generating analysis code with an LLM
+- Everyone (??) is generating analysis code with an LLM
   - …a pandas snippet, an R plot, a one-off filter
-- But the output is **ephemeral**: a chat message, a copied cell
+- But the output is **ephemeral**: a chat message, a copied cell, hardcoded paths
   - hard to re-run, hard to share, impossible to reproduce six months later
 - A User-Defined Tool is the natural package for it
   - structured inputs · typed parameters · a pinned container
@@ -195,66 +196,34 @@ outputs:
 
 ## Slide 15: Sharing — what works today
 
-User-defined tools are **private to their creator**. But they already travel:
+User-defined tools are **private to their creator**. But they are portable:
 
-- Embed one in a **workflow** — anyone who imports the workflow gets the tool created in their account
-- **Export to disk** and load it like a regular tool — instance-wide availability when you want it
+- Embed in a **workflow**
+  - anyone who imports the workflow gets the tool created in their account
+- **Export to disk** and load it like a regular tool
+  - instance-wide availability when you want it
 
 *Great for “me” and “my lab”. But there’s nothing between a private tool and a fully curated IUC toolshed tool.*
 
 ---
 
-## Slide 16: Proposal — a graduated promotion path
+## Slide 16: A graduated promotion path
 
 A tool should earn trust *and reach* incrementally, so good tools **converge** instead of duplicating:
 
 1. **Personal** — create and iterate; just you
-2. **Shared** — rides along in workflows / export to disk; passes static validation
-3. **Project** — adopted into a **GitHub repo with CI** (tests + lint on every change); reviewed and annotated — for a lab or community project
+2. **Shared** — In workflows or export to disk
+3. **Project** — adopted into a **GitHub repo with CI and Tool Shed Publishing** (tests + lint on every change); reviewed and annotated — for a lab or community project
 4. **IUC → Tool Shed** — once it proves generally useful: promoted to the **IUC** and published on the **Tool Shed** as a curated, globally available tool
 
 > Each step adds review, testing, and reach — without the full toolshed overhead up front. Full proposal in `promotion-path.md`.
 
 ---
 
-## Slide 17: Check the workflow before you run it {.section}
+## Slide 17: Getting access — today and what’s next
 
----
-
-## Slide 18: Validation in three layers — all run today, no runtime
-
-- **Static schema** — generated JSON Schema
-  - every input/output type-checks; outputs line up with the inputs they feed
-- **Pydantic validators** — the params *are* Pydantic models
-  - value & cross-field rules (a cutoff in range; `grouping_column` ≠ `numeric_column`); wiring across the workflow
-- **Linter** — lives in `galaxy-tool-util`
-  - the *same* engine that already powers the editor’s errors — annotations, deprecations, missing tests
-
----
-
-## Slide 19: Proposal — expose it through planemo
-
-Inputs and outputs are formally typed, so a workflow of UDTs is a **portable artifact** you can validate anywhere — in a repo, in CI, with no Galaxy server:
-
-```console
-$ planemo validate workflow.gxwf.yml
-✗ filter step:  'numeric_column' references a column not produced upstream
-✗ boxplot step: 'grouping_column' equals 'numeric_column'  (model validator)
-⚠ boxplot step: tool has no test case                  (lint)
-
-# …fix…
-
-$ planemo validate workflow.gxwf.yml
-✓ schema · ✓ validators · ✓ lint — valid, no Galaxy runtime required
-```
-*The same three layers, surfaced outside Galaxy. Full proposal in `workflow-validation.md`.*
-
----
-
-## Slide 20: Getting access — today and what’s next
-
-- **Access is an administrator decision** — UDTs are enabled per instance, then granted per user or role
-- **Gated for now** — while the feature matures, ask us for access on the public instances
+- **Access is administrator decision** — UDTs are enabled per instance, then granted per user or role
+- **Closed for now** — while the feature matures, ask us for access on the public instances
 - **Opening up soon** — broader, more self-serve access is on the way
 - **Bring your own compute** *(in progress)* — run UDTs on compute *you* bring, easing the resource and trust concerns that make some admins cautious
 

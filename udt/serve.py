@@ -11,6 +11,7 @@ into the served page, so the committed slides.html stays clean.
 """
 import http.server
 import os
+import re
 import socketserver
 import subprocess
 import sys
@@ -23,6 +24,23 @@ PORT = int(sys.argv[1]) if len(sys.argv) > 1 else 8000
 
 _version = 0          # bumped whenever the page should reload
 _lock = threading.Lock()
+
+def _asset_mtime(rel):
+    try:
+        return int(os.path.getmtime(os.path.join(ROOT, rel)))
+    except OSError:
+        return 0
+
+
+def cache_bust(html):
+    """Append each asset's mtime as ?v=… so a changed file gets a fresh URL,
+    defeating the browser image/CSS cache across live reloads."""
+    html = re.sub(r'src="(images/[^"?]+)"',
+                  lambda m: f'src="{m.group(1)}?v={_asset_mtime(m.group(1))}"', html)
+    html = re.sub(r'href="(slides\.css)"',
+                  lambda m: f'href="{m.group(1)}?v={_asset_mtime(m.group(1))}"', html)
+    return html
+
 
 RELOAD_JS = """
 <script>
@@ -99,6 +117,7 @@ class Handler(http.server.SimpleHTTPRequestHandler):
         except OSError:
             self.send_error(404)
             return
+        html = cache_bust(html)
         html = html.replace("</body>", RELOAD_JS + "</body>", 1)
         body = html.encode("utf-8")
         self.send_response(200)

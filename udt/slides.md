@@ -225,11 +225,11 @@ A tool should earn trust *and reach* incrementally, so good tools **converge** i
 - **Access is administrator decision** — UDTs are enabled per instance, then granted per user or role
 - **Closed for now** — while the feature matures, ask us for access on the public instances
 - **Opening up soon** — broader, more self-serve access is on the way
-- **Bring your own compute** *(in progress)* — run UDTs on compute *you* bring, easing the resource and trust concerns that make some admins cautious
+- **Bring your own compute** 🚧 — run UDTs on compute *you* bring, easing the resource and trust concerns that make some admins cautious
 
 ---
 
-## Slide 21: Coming to a server near you soon! {.closing}
+## Slide 18: Coming to a server near you soon! {.closing}
 
 ```yaml
 class: GalaxyUserTool
@@ -239,8 +239,9 @@ name: Thank You!
 description: Bring your own gratitude
 container: busybox
 shell_command: |
-  echo "Thank you John Chilton, Dannon Baker, Michael Crusoe,
-  Nicola Soranzo, Nate Coraor, Anton Nekrutenko, and the audience at GCC!" > thanks.txt
+  echo "Thank you to ohn Chilton, Dannon Baker, Michael Crusoe,
+  Nicola Soranzo, Nate Coraor, Anton Nekrutenko,
+  and the audience at GCC!" > thanks.txt
 outputs:
   - name: output1
     type: data

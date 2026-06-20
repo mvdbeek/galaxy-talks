@@ -8,6 +8,8 @@
 
 **Bring your own!**
 
+From throwaway LLM code → reproducible, validatable workflows
+
 ::: meta
 Marius van den Beek
 PSU / SCI-SCALE
@@ -16,49 +18,13 @@ marius@galaxyproject.org
 
 ---
 
-## Slide 2: Why can’t users install tools?
-
-- We don’t want to limit what you can do!
-  - I need “xyz” and it’s not on the server I use, help please?
-- You can already run code with RStudio and Jupyter*
-- We can isolate storage and compute
+## Slide 2: Why can’t users just install tools? {.section}
 
 ---
 
-## Slide 3: Why can’t users install tools? {.section}
+## Slide 3: The catch — a tool is arbitrary code
 
----
-
-## Slide 4: Templating with Cheetah
-
-```xml {hl=8-10}
-<tool id="cat" version="0.1">
-    <description>tail-to-head</description>
-    <requirements>
-        <requirement type="container">busybox</requirement>
-    </requirements>
-    <command><![CDATA[
-cat
-#for dataset in datasets:
-    '$dataset'
-#end for
-> '$output1'
-    ]]></command>
-    <inputs>
-        <input name="datasets" format="data" type="data" multiple="true"/>
-    </inputs>
-    <outputs>
-        <output name="output1" format_source="datasets" />
-    </outputs>
-</tool>
-```
-*Classic Galaxy tool — Cheetah loop over inputs*
-
----
-
-## Slide 5: Templating with Cheetah 🎃
-
-> [!WARN] **The catch:** Cheetah templates are evaluated as **arbitrary Python** while the job command is built — so a tool author can read the database, touch the filesystem, do anything. That’s exactly why users can’t be allowed to install tools.
+> [!WARN] **The catch:** A classic Galaxy tool’s command is a Cheetah template — evaluated as **arbitrary Python** while the job is built. A tool author can read the database, touch the filesystem, do anything. That’s exactly why users can’t be allowed to install tools.
 
 ```xml {hl=2-4}
 <command><![CDATA[
@@ -67,330 +33,174 @@ cat
     #open(f"{Path.home()}/a_file", "w").write("Hello!")
 ]]></command>
 ```
-*Nothing stops a template from running this*
+*Nothing stops a classic tool template from running this*
 
 ---
 
-## Slide 6: How do we manage 1000s of tools?
+## Slide 4: …so every tool is hand-curated
 
 ![Slide 6](images/slide-06.png)
-*galaxyproject/tools-iuc — 337 open / 5,450 closed pull requests. Every tool is hand-curated and reviewed.*
+*galaxyproject/tools-iuc — thousands of reviewed pull requests. Safe, but every tool goes through people. That doesn’t scale to “I need xyz, right now.”*
 
 ---
 
-## Slide 7: There has to be a better way! {.section}
-
----
-
-## Slide 8: Javascript expressions & JSON inputs
+## Slide 5: Last year’s answer — User-Defined Tools
 
 ```yaml {hl=8}
 class: GalaxyUserTool
-id: cat_user_defined
-version: "0.1"
-name: Concatenate Files
-description: tail-to-head
-container: busybox
-shell_command: |
-  cat $(inputs.datasets.map((input) => input.path).join(' ')) > output.txt
+name: Boxplot (ggplot2)
+description: Boxplot from a tabular file
+container: rocker/tidyverse
 inputs:
-  - name: datasets
-    multiple: true
-    type: data
+  - {name: table, type: data, format: tabular}
+  - {name: group_column, type: text}
+  - {name: value_column, type: text}
+shell_command: Rscript plot.R     # the R script lives in a configfile
 outputs:
-  - name: output1
-    type: data
-    format_source: datasets
-    from_work_dir: output.txt
+  - {name: plot, type: data, format: png, from_work_dir: boxplot.png}
 ```
-*A user-defined tool — values come from a sandboxed JS expression*
+*A User-Defined Tool: typed inputs, a container, sandboxed JS expressions — no XML, no Python, no review queue. This boxplot tool is our running example.*
 
 ---
 
-## Slide 9: Javascript expressions & JSON inputs
+## Slide 6: …and the editor makes it safe and pleasant
 
-```yaml
-class: GalaxyUserTool
-id: cat_user_defined
-version: "0.1"
-name: Concatenate Files
-description: tail-to-head
-container: busybox
-shell_command: |
-  cat $(inputs.datasets.map((input) => input.path).join(' ')) > output.txt
-inputs:
-  - name: datasets
-    multiple: true
-    type: data
-outputs:
-  - name: output1
-    type: data
-    format_source: datasets
-    from_work_dir: output.txt
-```
-*Tool definition*
-
-```javascript
-var inputs = {
-    "datasets": [
-        {
-            "class": "File",
-            "location": "step_input://1",
-            "format": "csv",
-            "path": "/Users/mvandenb/src/galaxy/databa…",
-            "basename": "markers.csv",
-            "nameroot": "markers",
-            "nameext": ".csv"
-        }
-    ],
-    "chromInfo": "/tmp/shared/ucsc/chrom/?.len",
-    "dbkey": "?",
-    "__input_ext": "input"
-};
-```
-*The inputs object the expression evaluates against (path truncated)*
-
----
-
-## Slide 10: Javascript expressions & JSON inputs
-
-```yaml
-class: GalaxyUserTool
-id: cat_user_defined
-version: "0.1"
-name: Concatenate Files
-description: tail-to-head
-container: busybox
-shell_command: |
-  cat $(inputs.datasets.map((input) => input.path).join(' ')) > output.txt
-inputs:
-  - name: datasets
-    multiple: true
-    type: data
-outputs:
-  - name: output1
-    type: data
-    format_source: datasets
-    from_work_dir: output.txt
-```
-*Tool Editor*
-
-> **Autocomplete:** In the editor, Monaco knows the inferred type of `input` inside the expression and offers autocomplete:
-
-```typescript
-(parameter) input: {
-    readonly class: "File";
-    readonly basename: string;
-    readonly location: string;
-    readonly path: string;
-    readonly listing: readonly string[] | null;
-    readonly nameroot: string | null;
-    readonly nameext: string | null;
-    readonly checksum: string | null;
-    readonly size: number;
-}
-```
+> **Typed, in the browser:** Monaco knows the inferred type of `inputs.*` from the tool’s schema — offering autocomplete, hover docs, and real TypeScript errors on the expressions, before anything runs.
 
 ![Slide 10](images/slide-10.png)
-*The live Tool Editor showing the autocomplete popup*
+*The live Tool Editor: type-aware autocomplete driven by the generated schema*
 
 ---
 
-## Slide 11: Javascript expressions & JSON inputs
-
-> Same view as the previous slide (presenter build step).
-
-![Slide 11](images/slide-11.png)
-*Tool Editor with type-aware autocomplete*
+## Slide 7: Your LLM code, made reproducible {.section}
 
 ---
 
-## Slide 12: Monaco + YAML schemas
+## Slide 8: LLMs write great throwaway code
 
-> **Hover docs:** Hovering a property in the YAML surfaces documentation pulled from the schema:
+- Everyone is generating analysis code with an LLM
+  - …a pandas snippet, an R plot, a one-off filter
+- But the output is **ephemeral**: a chat message, a copied cell
+  - hard to re-run, hard to share, impossible to reproduce six months later
+- A User-Defined Tool is the natural package for it
+  - structured inputs · typed parameters · a pinned container
+  - → a throwaway snippet becomes a recomputable, workflow-embeddable component
 
-```text
-(property) path: string
-Path
-@description — The absolute path to the file on disk.
+---
+
+## Slide 9: So let’s not write it by hand
+
+> [!WARN] **Live demo:** “Write a tool that uses ggplot2 to create a boxplot from a tabular file. The user should select a grouping column and a numeric column. Put the R script in a configfile.”
+
+![Slide 99](images/slide-99.png)
+*GalaxyAI (shipped as a FastMCP server) — or Claude / Orbit over MCP + a skill — authors the User-Defined Tool, multi-step, from that one sentence*
+
+---
+
+## Slide 10: The agent writes it — typed, not trusted blindly
+
+```yaml {hl=10-16}
+class: GalaxyUserTool
+name: Boxplot (ggplot2)
+description: Boxplot from a tabular file
+container: rocker/tidyverse
+inputs:
+  - {name: table, type: data, format: tabular}
+  - {name: group_column, type: text}
+  - {name: value_column, type: text}
+shell_command: Rscript plot.R
+configfiles:
+  - name: plot.R
+    content: |
+      library(ggplot2)
+      df <- read.delim("$(inputs.table.path)")
+      ggplot(df, aes(`$(inputs.group_column)`, `$(inputs.value_column)`)) +
+        geom_boxplot()
+      ggsave("boxplot.png")
+outputs:
+  - {name: plot, type: data, format: png, from_work_dir: boxplot.png}
 ```
-
-![Slide 12](images/slide-12.png)
-*Monaco hover tooltip driven by the YAML schema*
+*The R script lands in a `configfile`; `inputs.*` are still type-checked by Monaco and the linter — generated code that doesn’t type-check never runs.*
 
 ---
 
-## Slide 13: Monaco + Typescript interfaces
+## Slide 11: From my tool to our tool {.section}
 
-> [!WARN] **Type checking:** Typos in the expression are caught as real TypeScript errors, with suggestions:
+---
 
-```text
-Property 'datsets' does not exist on type '{ readonly datasets: readonly
-{ readonly class: "File"; readonly basename: string; readonly location:
-string; readonly path: string; readonly listing: readonly string[] |
-null; readonly nameroot: string | null; readonly nameext: string | null;
-readonly checksum: string | null; readonly size: number; }[]; }'.
-Did you mean 'datasets'?
+## Slide 12: Sharing — what works today
+
+User-defined tools are **private to their creator**. But they already travel:
+
+- Embed one in a **workflow** — anyone who imports the workflow gets the tool created in their account
+- **Export to disk** and load it like a regular tool — instance-wide availability when you want it
+
+*Great for “me” and “my lab”. But there’s nothing between a private tool and a fully curated IUC toolshed tool.*
+
+---
+
+## Slide 13: Proposal — a graduated promotion path
+
+A tool should earn trust **incrementally** — without the full IUC toolshed overhead at every step:
+
+1. **Personal** — just you (create it)
+2. **Shared** — rides along in a workflow; passes static validation
+3. **Reviewed** — ≥1 peer review + at least one recorded test
+4. **Annotated** — description, ontology terms, license, citation
+5. **Community** — maintainer sign-off → a curated registry
+
+> Each stage adds exactly one trust signal — scope, review, testing, annotation, curation. Full proposal in `promotion-path.md`.
+
+---
+
+## Slide 14: Check the workflow before you run it {.section}
+
+---
+
+## Slide 15: Validation in three layers — all run today, no runtime
+
+- **Static schema** — generated JSON Schema
+  - every input/output type-checks; outputs line up with the inputs they feed
+- **Pydantic validators** — the params *are* Pydantic models
+  - value & cross-field rules (a cutoff in range; `group_column` ≠ `value_column`); wiring across the workflow
+- **Linter** — lives in `galaxy-tool-util`
+  - the *same* engine that already powers the editor’s errors — annotations, deprecations, missing tests
+
+---
+
+## Slide 16: Proposal — expose it through planemo
+
+Inputs and outputs are formally typed, so a workflow of UDTs is a **portable artifact** you can validate anywhere — in a repo, in CI, with no Galaxy server:
+
+```console
+$ planemo validate workflow.gxwf.yml
+✗ filter step:  'value_column' references a column not produced upstream
+✗ boxplot step: 'group_column' equals 'value_column'   (model validator)
+⚠ boxplot step: tool has no test case                  (lint)
+
+# …fix…
+
+$ planemo validate workflow.gxwf.yml
+✓ schema · ✓ validators · ✓ lint — valid, no Galaxy runtime required
 ```
-
-![Slide 13](images/slide-13.png)
-*TypeScript error shown inline in the Tool Editor*
+*The same three layers, surfaced outside Galaxy. Full proposal in `workflow-validation.md`.*
 
 ---
 
-## Slide 14: Behind the scenes
-
-- Tool parameters are modeled as Pydantic models
-  - As a general schema that describes “A Galaxy Tool”
-  - As a specialized schema for “This Galaxy Tool’s Potential Input Object”
-- Pydantic models are transformed to JSON schema
-- JSON schema is transformed to a TypeScript interface for runtime inputs
-- Monaco Editor renders the tool source
-  - Knows what to do with the YAML schema for the tool
-  - Understands the TypeScript interface and compares it to the code in JavaScript fragments
-
----
-
-## Slide 15: Behind the scenes {.section}
-
----
-
-## Slide 16: Generated JSON schema — inputs
-
-```json
-"inputs": {
-    "additionalProperties": false,
-    "properties": {
-        "datasets": {
-            "items": {
-                "$ref": "#/components/schemas/DataInternalJson"
-            },
-            "title": "Datasets",
-            "type": "array"
-        }
-    },
-    "required": [
-        "datasets"
-    ],
-```
-*Top-level inputs schema (excerpt)*
-
----
-
-## Slide 17: Generated JSON schema — inputs
-
-> Same schema as the previous slide (presenter build step).
-
-```json
-"inputs": {
-    "additionalProperties": false,
-    "properties": {
-        "datasets": {
-            "items": {
-                "$ref": "#/components/schemas/DataInternalJson"
-            },
-            "title": "Datasets",
-            "type": "array"
-        }
-    },
-    "required": [
-        "datasets"
-    ],
-```
-*Top-level inputs schema (excerpt)*
-
----
-
-## Slide 18: Generated JSON schema — DataInternalJson
-
-```json
-"DataInternalJson": {
-    "additionalProperties": false,
-    "properties": {
-        "class": {
-            "const": "File",
-            "title": "Class",
-            "type": "string"
-        },
-        "basename": {
-            "description": "The base name of the file, that is, the nam…",
-            "title": "Basename",
-            "type": "string"
-        },
-        "location": {
-            "title": "Location",
-            "type": "string"
-        },
-        "path": {
-            "description": "The absolute path to the file on disk.",
-            "title": "Path",
-            "type": "string"
-        },
-    }
-}
-```
-*The File schema referenced by inputs (excerpt; some descriptions truncated)*
-
----
-
-## Slide 19: Enabling User-Defined Tools
-
-> To enable this feature:
-
-1. Set `enable_beta_tool_formats: true` in your Galaxy configuration.
-2. Create a role of type `Custom Tool Execution` in the admin user interface.
-3. Assign users or groups to this role.
-
----
-
-## Slide 20: Sharing User-Defined Tools
-
-User-defined tools are private to their creators. However, if a tool is embedded in a workflow, any user who imports that workflow will automatically have the tool created in their account.
-
-These tools can also be exported to disk and loaded like regular tools, enabling instance-wide availability if needed.
-
----
-
-## Slide 21: Sharing User-Defined Tools
-
-> Same content as the previous slide (presenter build step).
-
-User-defined tools are private to their creators. However, if a tool is embedded in a workflow, any user who imports that workflow will automatically have the tool created in their account.
-
-These tools can also be exported to disk and loaded like regular tools, enabling instance-wide availability if needed.
-
----
-
-## Slide 22: Limitations
-
-The user-defined tool language is still evolving, and additional safety audits are ongoing.
-
-Current limitations include:
-
-- Access to reference data is not supported
-- Access to metadata and metadata files (such as BAM indexes) is not supported
-- Access to the `extra_files` directory is not supported
-
----
-
-## Slide 23: Coming to a server near you soon! {.closing}
+## Slide 17: Coming to a server near you soon! {.closing}
 
 ```yaml
 class: GalaxyUserTool
-id: thank-you
-version: "1.0"
 name: Thank You!
 description: Bring your own gratitude
 container: busybox
 shell_command: |
-  echo "Thank you John Chilton, Dannon Baker, Michael Crusoe,
-  Nicola Soranzo, Anton Nekrutenko, and the audience at GCC!" > thanks.txt
+  echo "An LLM writes it → the editor types it → the community
+  promotes it → planemo verifies it. Bring your own tool!" > thanks.txt
 outputs:
-  - name: output1
-    type: data
-    from_work_dir: thanks.txt
+  - {name: output1, type: data, from_work_dir: thanks.txt}
 ```
-*One last user-defined tool*
+*Enable it, build one, help build the path. Thanks to John Chilton, Dannon Baker, Michael Crusoe, Nicola Soranzo, Anton Nekrutenko, and the audience at GCC!*
 
 ::: meta
 With gratitude 💜

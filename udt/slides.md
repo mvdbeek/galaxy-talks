@@ -84,7 +84,7 @@ outputs:
 > **Typed, in the browser:** Monaco knows the inferred type of `inputs.*` from the tool’s schema — offering autocomplete, hover docs, and real TypeScript errors on the expressions, before anything runs.
 
 ![Slide 10](images/slide-10.png)
-*The live Tool Editor: type-aware autocomplete driven by the generated schema*
+*The live Tool Editor — the same boxplot tool: type-aware hover docs and inline errors, driven by the generated schema*
 
 ---
 

@@ -72,11 +72,23 @@ outputs:
 
 ---
 
-## Slide 7: Your LLM code, made reproducible {.section}
+## Slide 7: Why we built this — iterate against the real thing
+
+- The classic loop is slow: write XML, build a container, open a PR, wait for review — *before you even know the idea works*
+- User-defined tools turn that into a live loop, right where your data is:
+  - **Is this even the tool I want?** — try it, look at the output, change it
+  - **Get the first shot right** — a tight edit → run → inspect cycle
+  - **Test against real resources** — real datasets and real compute: GPUs, more memory, the cluster it’ll actually run on
+- Humans need this — and agents and LLMs need it even more
+  - try → run → inspect → fix is exactly how an agent converges on a tool that works
 
 ---
 
-## Slide 8: LLMs write great throwaway code
+## Slide 8: Your LLM code, made reproducible {.section}
+
+---
+
+## Slide 9: LLMs write great throwaway code
 
 - Everyone is generating analysis code with an LLM
   - …a pandas snippet, an R plot, a one-off filter
@@ -88,7 +100,7 @@ outputs:
 
 ---
 
-## Slide 9: So let’s not write it by hand
+## Slide 10: So let’s not write it by hand
 
 > [!WARN] **Live demo:** “Write a tool that uses ggplot2 to create a boxplot from a tabular file. The user should select a grouping column and a numeric column. Put the R script in a configfile.”
 
@@ -97,7 +109,7 @@ outputs:
 
 ---
 
-## Slide 10: The agent writes it — typed, not trusted blindly
+## Slide 11: The agent writes it — typed, not trusted blindly
 
 ```yaml {hl=10-16}
 class: GalaxyUserTool
@@ -124,11 +136,11 @@ outputs:
 
 ---
 
-## Slide 11: From my tool to our tool {.section}
+## Slide 12: From my tool to our tool {.section}
 
 ---
 
-## Slide 12: Sharing — what works today
+## Slide 13: Sharing — what works today
 
 User-defined tools are **private to their creator**. But they already travel:
 
@@ -139,7 +151,7 @@ User-defined tools are **private to their creator**. But they already travel:
 
 ---
 
-## Slide 13: Proposal — a graduated promotion path
+## Slide 14: Proposal — a graduated promotion path
 
 A tool should earn trust **incrementally** — without the full IUC toolshed overhead at every step:
 
@@ -153,11 +165,11 @@ A tool should earn trust **incrementally** — without the full IUC toolshed ove
 
 ---
 
-## Slide 14: Check the workflow before you run it {.section}
+## Slide 15: Check the workflow before you run it {.section}
 
 ---
 
-## Slide 15: Validation in three layers — all run today, no runtime
+## Slide 16: Validation in three layers — all run today, no runtime
 
 - **Static schema** — generated JSON Schema
   - every input/output type-checks; outputs line up with the inputs they feed
@@ -168,7 +180,7 @@ A tool should earn trust **incrementally** — without the full IUC toolshed ove
 
 ---
 
-## Slide 16: Proposal — expose it through planemo
+## Slide 17: Proposal — expose it through planemo
 
 Inputs and outputs are formally typed, so a workflow of UDTs is a **portable artifact** you can validate anywhere — in a repo, in CI, with no Galaxy server:
 
@@ -187,7 +199,7 @@ $ planemo validate workflow.gxwf.yml
 
 ---
 
-## Slide 17: Coming to a server near you soon! {.closing}
+## Slide 18: Coming to a server near you soon! {.closing}
 
 ```yaml
 class: GalaxyUserTool
@@ -207,5 +219,5 @@ outputs:
 *One last user-defined tool*
 
 ::: meta
-Bring Your Own Tools
+Bring Your Own Tools!
 :::

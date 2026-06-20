@@ -17,7 +17,7 @@
 </header>
 <main class="deck">
   <section class="slide slide--title" id="slide-1" aria-label="Slide 1">
-    <span class="slide__num">1 / 17</span>
+    <span class="slide__num">1 / 18</span>
     <h2 class="slide__title">User-Defined Tools</h2>
     <p class="slide__subtitle">Bring your own!</p>
     <div class="slide__blocks">
@@ -26,11 +26,11 @@
     <div class="slide__meta"><p>Marius van den Beek</p><p>PSU / SCI-SCALE</p><p>marius@galaxyproject.org</p></div>
   </section>
   <section class="slide slide--section" id="slide-2" aria-label="Slide 2">
-    <span class="slide__num">2 / 17</span>
+    <span class="slide__num">2 / 18</span>
     <h2 class="slide__title">Why can’t users just install tools?</h2>
   </section>
   <section class="slide slide--content" id="slide-3" aria-label="Slide 3">
-    <span class="slide__num">3 / 17</span>
+    <span class="slide__num">3 / 18</span>
     <h2 class="slide__title">The catch — a tool is arbitrary code</h2>
     <div class="slide__blocks">
       <aside class="note note--warn"><span class="note__title">The catch</span><span>A classic Galaxy tool’s command is a Cheetah template — evaluated as <strong>arbitrary Python</strong> while the job is built. A tool author can read the database, touch the filesystem, do anything. That’s exactly why users can’t be allowed to install tools.</span></aside>
@@ -38,57 +38,62 @@
     </div>
   </section>
   <section class="slide slide--content" id="slide-4" aria-label="Slide 4">
-    <span class="slide__num">4 / 17</span>
+    <span class="slide__num">4 / 18</span>
     <h2 class="slide__title">…so every tool is hand-curated</h2>
     <div class="slide__blocks">
       <figure class="shot"><img src="images/slide-06.png" alt="Slide 6 screenshot" loading="lazy"><figcaption>galaxyproject/tools-iuc — thousands of reviewed pull requests. Safe, but every tool goes through people. That doesn’t scale to “I need xyz, right now.”</figcaption></figure>
     </div>
   </section>
   <section class="slide slide--content" id="slide-5" aria-label="Slide 5">
-    <span class="slide__num">5 / 17</span>
+    <span class="slide__num">5 / 18</span>
     <h2 class="slide__title">The answer — User-Defined Tools</h2>
     <div class="slide__blocks">
       <figure class="code"><pre class="language-yaml"><code><span class="line"><span class="ln">1</span><span class="lc">class: GalaxyUserTool</span></span><span class="line"><span class="ln">2</span><span class="lc">name: Boxplot (ggplot2)</span></span><span class="line"><span class="ln">3</span><span class="lc">description: Boxplot from a tabular file</span></span><span class="line"><span class="ln">4</span><span class="lc">container: rocker/tidyverse</span></span><span class="line"><span class="ln">5</span><span class="lc">inputs:</span></span><span class="line"><span class="ln">6</span><span class="lc">  - {name: table, type: data, format: tabular}</span></span><span class="line"><span class="ln">7</span><span class="lc">  - {name: group_column, type: text}</span></span><span class="line hl"><span class="ln">8</span><span class="lc">  - {name: value_column, type: text}</span></span><span class="line"><span class="ln">9</span><span class="lc">shell_command: Rscript plot.R     # the R script lives in a configfile</span></span><span class="line"><span class="ln">10</span><span class="lc">outputs:</span></span><span class="line"><span class="ln">11</span><span class="lc">  - {name: plot, type: data, format: png, from_work_dir: boxplot.png}</span></span></code></pre><figcaption>A User-Defined Tool: typed inputs, a container, sandboxed JS expressions — no XML, no Python, no review queue. This boxplot tool is our running example.</figcaption></figure>
     </div>
   </section>
   <section class="slide slide--content" id="slide-6" aria-label="Slide 6">
-    <span class="slide__num">6 / 17</span>
+    <span class="slide__num">6 / 18</span>
     <h2 class="slide__title">…and the editor makes it safe and pleasant</h2>
     <div class="slide__blocks">
       <aside class="note note--info"><span class="note__title">Typed, in the browser</span><span>Monaco knows the inferred type of <code>inputs.*</code> from the tool’s schema — offering autocomplete, hover docs, and real TypeScript errors on the expressions, before anything runs.</span></aside>
       <figure class="shot"><img src="images/slide-10.png" alt="Slide 10 screenshot" loading="lazy"><figcaption>The live Tool Editor: type-aware autocomplete driven by the generated schema</figcaption></figure>
     </div>
   </section>
-  <section class="slide slide--section" id="slide-7" aria-label="Slide 7">
-    <span class="slide__num">7 / 17</span>
+  <section class="slide slide--content" id="slide-7" aria-label="Slide 7">
+    <span class="slide__num">7 / 18</span>
+    <h2 class="slide__title">Why we built this — iterate against the real thing</h2>
+    <div class="slide__body"><ul><li>The classic loop is slow: write XML, build a container, open a PR, wait for review — *before you even know the idea works*</li><li>User-defined tools turn that into a live loop, right where your data is:<ul><li><strong>Is this even the tool I want?</strong> — try it, look at the output, change it</li><li><strong>Get the first shot right</strong> — a tight edit → run → inspect cycle</li><li><strong>Test against real resources</strong> — real datasets and real compute: GPUs, more memory, the cluster it’ll actually run on</li></ul></li><li>Humans need this — and agents and LLMs need it even more<ul><li>try → run → inspect → fix is exactly how an agent converges on a tool that works</li></ul></li></ul></div>
+  </section>
+  <section class="slide slide--section" id="slide-8" aria-label="Slide 8">
+    <span class="slide__num">8 / 18</span>
     <h2 class="slide__title">Your LLM code, made reproducible</h2>
   </section>
-  <section class="slide slide--content" id="slide-8" aria-label="Slide 8">
-    <span class="slide__num">8 / 17</span>
+  <section class="slide slide--content" id="slide-9" aria-label="Slide 9">
+    <span class="slide__num">9 / 18</span>
     <h2 class="slide__title">LLMs write great throwaway code</h2>
     <div class="slide__body"><ul><li>Everyone is generating analysis code with an LLM<ul><li>…a pandas snippet, an R plot, a one-off filter</li></ul></li><li>But the output is <strong>ephemeral</strong>: a chat message, a copied cell<ul><li>hard to re-run, hard to share, impossible to reproduce six months later</li></ul></li><li>A User-Defined Tool is the natural package for it<ul><li>structured inputs · typed parameters · a pinned container</li><li>→ a throwaway snippet becomes a recomputable, workflow-embeddable component</li></ul></li></ul></div>
   </section>
-  <section class="slide slide--content" id="slide-9" aria-label="Slide 9">
-    <span class="slide__num">9 / 17</span>
+  <section class="slide slide--content" id="slide-10" aria-label="Slide 10">
+    <span class="slide__num">10 / 18</span>
     <h2 class="slide__title">So let’s not write it by hand</h2>
     <div class="slide__blocks">
       <aside class="note note--warn"><span class="note__title">Live demo</span><span>“Write a tool that uses ggplot2 to create a boxplot from a tabular file. The user should select a grouping column and a numeric column. Put the R script in a configfile.”</span></aside>
       <figure class="shot"><img src="images/slide-99.png" alt="Slide 99 screenshot" loading="lazy"><figcaption>GalaxyAI (shipped as a FastMCP server) — or Claude / Orbit over MCP + a skill — authors the User-Defined Tool, multi-step, from that one sentence</figcaption></figure>
     </div>
   </section>
-  <section class="slide slide--content" id="slide-10" aria-label="Slide 10">
-    <span class="slide__num">10 / 17</span>
+  <section class="slide slide--content" id="slide-11" aria-label="Slide 11">
+    <span class="slide__num">11 / 18</span>
     <h2 class="slide__title">The agent writes it — typed, not trusted blindly</h2>
     <div class="slide__blocks">
       <figure class="code"><pre class="language-yaml"><code><span class="line"><span class="ln">1</span><span class="lc">class: GalaxyUserTool</span></span><span class="line"><span class="ln">2</span><span class="lc">name: Boxplot (ggplot2)</span></span><span class="line"><span class="ln">3</span><span class="lc">description: Boxplot from a tabular file</span></span><span class="line"><span class="ln">4</span><span class="lc">container: rocker/tidyverse</span></span><span class="line"><span class="ln">5</span><span class="lc">inputs:</span></span><span class="line"><span class="ln">6</span><span class="lc">  - {name: table, type: data, format: tabular}</span></span><span class="line"><span class="ln">7</span><span class="lc">  - {name: group_column, type: text}</span></span><span class="line"><span class="ln">8</span><span class="lc">  - {name: value_column, type: text}</span></span><span class="line"><span class="ln">9</span><span class="lc">shell_command: Rscript plot.R</span></span><span class="line hl"><span class="ln">10</span><span class="lc">configfiles:</span></span><span class="line hl"><span class="ln">11</span><span class="lc">  - name: plot.R</span></span><span class="line hl"><span class="ln">12</span><span class="lc">    content: |</span></span><span class="line hl"><span class="ln">13</span><span class="lc">      library(ggplot2)</span></span><span class="line hl"><span class="ln">14</span><span class="lc">      df &lt;- read.delim(&quot;$(inputs.table.path)&quot;)</span></span><span class="line hl"><span class="ln">15</span><span class="lc">      ggplot(df, aes(`$(inputs.group_column)`, `$(inputs.value_column)`)) +</span></span><span class="line hl"><span class="ln">16</span><span class="lc">        geom_boxplot()</span></span><span class="line"><span class="ln">17</span><span class="lc">      ggsave(&quot;boxplot.png&quot;)</span></span><span class="line"><span class="ln">18</span><span class="lc">outputs:</span></span><span class="line"><span class="ln">19</span><span class="lc">  - {name: plot, type: data, format: png, from_work_dir: boxplot.png}</span></span></code></pre><figcaption>The R script lands in a `configfile`; `inputs.*` are still type-checked by Monaco and the linter — generated code that doesn’t type-check never runs.</figcaption></figure>
     </div>
   </section>
-  <section class="slide slide--section" id="slide-11" aria-label="Slide 11">
-    <span class="slide__num">11 / 17</span>
+  <section class="slide slide--section" id="slide-12" aria-label="Slide 12">
+    <span class="slide__num">12 / 18</span>
     <h2 class="slide__title">From my tool to our tool</h2>
   </section>
-  <section class="slide slide--content" id="slide-12" aria-label="Slide 12">
-    <span class="slide__num">12 / 17</span>
+  <section class="slide slide--content" id="slide-13" aria-label="Slide 13">
+    <span class="slide__num">13 / 18</span>
     <h2 class="slide__title">Sharing — what works today</h2>
     <div class="slide__blocks">
       <p class="prose">User-defined tools are <strong>private to their creator</strong>. But they already travel:</p>
@@ -96,8 +101,8 @@
       <p class="prose">*Great for “me” and “my lab”. But there’s nothing between a private tool and a fully curated IUC toolshed tool.*</p>
     </div>
   </section>
-  <section class="slide slide--content" id="slide-13" aria-label="Slide 13">
-    <span class="slide__num">13 / 17</span>
+  <section class="slide slide--content" id="slide-14" aria-label="Slide 14">
+    <span class="slide__num">14 / 18</span>
     <h2 class="slide__title">Proposal — a graduated promotion path</h2>
     <div class="slide__blocks">
       <p class="prose">A tool should earn trust <strong>incrementally</strong> — without the full IUC toolshed overhead at every step:</p>
@@ -105,30 +110,30 @@
       <aside class="note note--info"><span>Each stage adds exactly one trust signal — scope, review, testing, annotation, curation. Full proposal in <code>promotion-path.md</code>.</span></aside>
     </div>
   </section>
-  <section class="slide slide--section" id="slide-14" aria-label="Slide 14">
-    <span class="slide__num">14 / 17</span>
+  <section class="slide slide--section" id="slide-15" aria-label="Slide 15">
+    <span class="slide__num">15 / 18</span>
     <h2 class="slide__title">Check the workflow before you run it</h2>
   </section>
-  <section class="slide slide--content" id="slide-15" aria-label="Slide 15">
-    <span class="slide__num">15 / 17</span>
+  <section class="slide slide--content" id="slide-16" aria-label="Slide 16">
+    <span class="slide__num">16 / 18</span>
     <h2 class="slide__title">Validation in three layers — all run today, no runtime</h2>
     <div class="slide__body"><ul><li><strong>Static schema</strong> — generated JSON Schema<ul><li>every input/output type-checks; outputs line up with the inputs they feed</li></ul></li><li><strong>Pydantic validators</strong> — the params *are* Pydantic models<ul><li>value &amp; cross-field rules (a cutoff in range; <code>group_column</code> ≠ <code>value_column</code>); wiring across the workflow</li></ul></li><li><strong>Linter</strong> — lives in <code>galaxy-tool-util</code><ul><li>the *same* engine that already powers the editor’s errors — annotations, deprecations, missing tests</li></ul></li></ul></div>
   </section>
-  <section class="slide slide--content" id="slide-16" aria-label="Slide 16">
-    <span class="slide__num">16 / 17</span>
+  <section class="slide slide--content" id="slide-17" aria-label="Slide 17">
+    <span class="slide__num">17 / 18</span>
     <h2 class="slide__title">Proposal — expose it through planemo</h2>
     <div class="slide__blocks">
       <p class="prose">Inputs and outputs are formally typed, so a workflow of UDTs is a <strong>portable artifact</strong> you can validate anywhere — in a repo, in CI, with no Galaxy server:</p>
       <figure class="code"><pre class="language-console"><code><span class="line"><span class="ln">1</span><span class="lc">$ planemo validate workflow.gxwf.yml</span></span><span class="line"><span class="ln">2</span><span class="lc">✗ filter step:  &#x27;value_column&#x27; references a column not produced upstream</span></span><span class="line"><span class="ln">3</span><span class="lc">✗ boxplot step: &#x27;group_column&#x27; equals &#x27;value_column&#x27;   (model validator)</span></span><span class="line"><span class="ln">4</span><span class="lc">⚠ boxplot step: tool has no test case                  (lint)</span></span><span class="line"><span class="ln">5</span><span class="lc">&nbsp;</span></span><span class="line"><span class="ln">6</span><span class="lc"># …fix…</span></span><span class="line"><span class="ln">7</span><span class="lc">&nbsp;</span></span><span class="line"><span class="ln">8</span><span class="lc">$ planemo validate workflow.gxwf.yml</span></span><span class="line"><span class="ln">9</span><span class="lc">✓ schema · ✓ validators · ✓ lint — valid, no Galaxy runtime required</span></span></code></pre><figcaption>The same three layers, surfaced outside Galaxy. Full proposal in `workflow-validation.md`.</figcaption></figure>
     </div>
   </section>
-  <section class="slide slide--closing" id="slide-17" aria-label="Slide 17">
-    <span class="slide__num">17 / 17</span>
+  <section class="slide slide--closing" id="slide-18" aria-label="Slide 18">
+    <span class="slide__num">18 / 18</span>
     <h2 class="slide__title">Coming to a server near you soon!</h2>
     <div class="slide__blocks">
       <figure class="code"><pre class="language-yaml"><code><span class="line"><span class="ln">1</span><span class="lc">class: GalaxyUserTool</span></span><span class="line"><span class="ln">2</span><span class="lc">id: thank-you</span></span><span class="line"><span class="ln">3</span><span class="lc">version: &quot;1.0&quot;</span></span><span class="line"><span class="ln">4</span><span class="lc">name: Thank You!</span></span><span class="line"><span class="ln">5</span><span class="lc">description: Bring your own gratitude</span></span><span class="line"><span class="ln">6</span><span class="lc">container: busybox</span></span><span class="line"><span class="ln">7</span><span class="lc">shell_command: |</span></span><span class="line"><span class="ln">8</span><span class="lc">  echo &quot;Thank you John Chilton, Dannon Baker, Michael Crusoe,</span></span><span class="line"><span class="ln">9</span><span class="lc">  Nicola Soranzo, Anton Nekrutenko, and the audience at GCC!&quot; &gt; thanks.txt</span></span><span class="line"><span class="ln">10</span><span class="lc">outputs:</span></span><span class="line"><span class="ln">11</span><span class="lc">  - name: output1</span></span><span class="line"><span class="ln">12</span><span class="lc">    type: data</span></span><span class="line"><span class="ln">13</span><span class="lc">    from_work_dir: thanks.txt</span></span></code></pre><figcaption>One last user-defined tool</figcaption></figure>
     </div>
-    <div class="slide__meta"><p>Bring Your Own Tools</p></div>
+    <div class="slide__meta"><p>Bring Your Own Tools!</p></div>
   </section>
 </main>
 <script>

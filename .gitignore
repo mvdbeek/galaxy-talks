@@ -3,6 +3,7 @@
 .*
 !.gitignore
 !.github/
+!.nojekyll
 
 # Python
 __pycache__/

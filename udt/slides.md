@@ -149,7 +149,7 @@ shell_command: |
 
 ## Slide 12: The agent writes it — typed, not trusted blindly
 
-```yaml {hl=12-14,16}
+```yaml
 class: GalaxyUserTool
 id: ggplot2-boxplot
 name: GGplot2 Boxplot

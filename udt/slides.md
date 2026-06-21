@@ -147,36 +147,12 @@ shell_command: |
 
 ---
 
-## Slide 12: The agent writes it — typed, not trusted blindly
+## Slide 12: What just happened
 
-```yaml
-class: GalaxyUserTool
-id: ggplot2-boxplot
-name: GGplot2 Boxplot
-version: "0.1.0"
-description: Boxplot from tabular data — a grouping column and a numeric column
-container: quay.io/biocontainers/mulled-v2-7f8b12fca13e111f00a2151c6311f06e7b9ef182:5830a049cfa83bf9728d3496544e64969e1ef789-0
-shell_command: Rscript boxplot.R
-configfiles:
-  - filename: boxplot.R
-    content: |
-      library(ggplot2)
-      data <- read.table("$(inputs.input_file.path)", header=TRUE, sep="\t")
-      ggplot(data, aes(x = .data[["$(inputs.grouping_column)"]],
-                       y = .data[["$(inputs.numeric_column)"]])) +
-        geom_boxplot(fill="lightblue", color="darkblue") +
-        labs(title="$(inputs.plot_title)") +
-        theme_bw()
-      ggsave("boxplot.pdf", width=8, height=6, dpi=300)
-inputs:
-  - {name: input_file, type: data, format: tabular}
-  - {name: grouping_column, type: text}
-  - {name: numeric_column, type: text}
-  - {name: plot_title, type: text}
-outputs:
-  - {name: plot, type: data, format: pdf, from_work_dir: boxplot.pdf}
-```
-*The agent produced exactly this. Every `$(inputs.*)` in the R script is type-checked by Monaco against the tool’s schema — generated code that doesn’t type-check never runs.*
+- **We described it** in one sentence → GalaxyAI wrote the whole tool
+- **Type hint and linting  displayed in Tool Editor** — generated code that doesn’t type-check never runs
+- **We ran it** in a container, on real data
+- → **reproducible and trustworthy.** Now: how do we share it?
 
 ---
 

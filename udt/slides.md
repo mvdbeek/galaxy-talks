@@ -228,3 +228,12 @@ outputs:
 ::: meta
 Bring Your Own Tools!
 :::
+
+---
+
+## Slide 19: SCI-SCALE CommV is hiring
+
+- If you want to work on things like User-Defined Tools, Workflows, green compute, bring your own compute — let's talk.
+- Would consider **moving to Belgium**? Even better. **Come speak to me.**
+
+> Find me after the talk — or `marius@sci-scale.net`

@@ -17,7 +17,7 @@
 </header>
 <main class="deck">
   <section class="slide slide--title" id="slide-1" aria-label="Slide 1">
-    <span class="slide__num">1 / 18</span>
+    <span class="slide__num">1 / 19</span>
     <h2 class="slide__title">User-Defined Tools</h2>
     <p class="slide__subtitle">Bring your own Tool!</p>
     <div class="slide__blocks">
@@ -26,14 +26,14 @@
     <div class="slide__meta"><p>Marius van den Beek</p><p>PSU / SCI-SCALE</p><p>marius@galaxyproject.org</p></div>
   </section>
   <section class="slide slide--section" id="slide-2" aria-label="Slide 2">
-    <span class="slide__num">2 / 18</span>
+    <span class="slide__num">2 / 19</span>
     <h2 class="slide__title">From users to tool authors</h2>
     <div class="slide__blocks">
       <p class="prose">Lower the barrier, grow the community — Accessible · Reproducible · Transparent</p>
     </div>
   </section>
   <section class="slide slide--content" id="slide-3" aria-label="Slide 3">
-    <span class="slide__num">3 / 18</span>
+    <span class="slide__num">3 / 19</span>
     <h2 class="slide__title">The catch — a tool is arbitrary code</h2>
     <div class="slide__blocks">
       <aside class="note note--warn"><span class="note__title">The catch</span><span>A classic Galaxy tool’s command is a Cheetah template — evaluated as <strong>arbitrary Python</strong> while the job is built. A tool author can read the database, touch the filesystem, do anything. That’s exactly why users can’t be allowed to install tools.</span></aside>
@@ -41,7 +41,7 @@
     </div>
   </section>
   <section class="slide slide--content" id="slide-4" aria-label="Slide 4">
-    <span class="slide__num">4 / 18</span>
+    <span class="slide__num">4 / 19</span>
     <h2 class="slide__title">Curation is a strength — good tools make good workflows</h2>
     <div class="slide__blocks">
       <figure class="shot"><img src="images/slide-06.png" alt="Slide 6 screenshot" loading="lazy"><figcaption>galaxyproject/tools-iuc: thousands of carefully reviewed tools — one of Galaxy’s greatest strengths. Trusted, reproducible tools are exactly what make trusted, reproducible workflows.</figcaption></figure>
@@ -49,14 +49,14 @@
     </div>
   </section>
   <section class="slide slide--content" id="slide-5" aria-label="Slide 5">
-    <span class="slide__num">5 / 18</span>
+    <span class="slide__num">5 / 19</span>
     <h2 class="slide__title">The answer — User-Defined Tools</h2>
     <div class="slide__blocks">
       <figure class="code"><pre class="language-yaml"><code><span class="line"><span class="ln">1</span><span class="lc">class: GalaxyUserTool</span></span><span class="line"><span class="ln">2</span><span class="lc">id: ggplot2-boxplot</span></span><span class="line"><span class="ln">3</span><span class="lc">name: GGplot2 Boxplot</span></span><span class="line"><span class="ln">4</span><span class="lc">version: &quot;0.1.0&quot;</span></span><span class="line"><span class="ln">5</span><span class="lc">description: Boxplot from tabular data — a grouping column and a numeric column</span></span><span class="line"><span class="ln">6</span><span class="lc">container: quay.io/biocontainers/mulled-v2-7f8b12fca13e111f00a2151c6311f06e7b9ef182:5830a049cfa83bf9728d3496544e64969e1ef789-0</span></span><span class="line"><span class="ln">7</span><span class="lc">shell_command: Rscript boxplot.R</span></span><span class="line hl"><span class="ln">8</span><span class="lc">configfiles:</span></span><span class="line hl"><span class="ln">9</span><span class="lc">  - filename: boxplot.R</span></span><span class="line hl"><span class="ln">10</span><span class="lc">    content: |</span></span><span class="line hl"><span class="ln">11</span><span class="lc">      library(ggplot2)</span></span><span class="line hl"><span class="ln">12</span><span class="lc">      data &lt;- read.table(&quot;$(inputs.input_file.path)&quot;, header=TRUE, sep=&quot;\t&quot;)</span></span><span class="line hl"><span class="ln">13</span><span class="lc">      ggplot(data, aes(x = .data[[&quot;$(inputs.grouping_column)&quot;]],</span></span><span class="line hl"><span class="ln">14</span><span class="lc">                       y = .data[[&quot;$(inputs.numeric_column)&quot;]])) +</span></span><span class="line hl"><span class="ln">15</span><span class="lc">        geom_boxplot(fill=&quot;lightblue&quot;, color=&quot;darkblue&quot;) +</span></span><span class="line hl"><span class="ln">16</span><span class="lc">        labs(title=&quot;$(inputs.plot_title)&quot;) +</span></span><span class="line hl"><span class="ln">17</span><span class="lc">        theme_bw()</span></span><span class="line hl"><span class="ln">18</span><span class="lc">      ggsave(&quot;boxplot.pdf&quot;, width=8, height=6, dpi=300)</span></span><span class="line"><span class="ln">19</span><span class="lc">inputs:</span></span><span class="line"><span class="ln">20</span><span class="lc">  - {name: input_file, type: data, format: tabular}</span></span><span class="line"><span class="ln">21</span><span class="lc">  - {name: grouping_column, type: text}</span></span><span class="line"><span class="ln">22</span><span class="lc">  - {name: numeric_column, type: text}</span></span><span class="line"><span class="ln">23</span><span class="lc">  - {name: plot_title, type: text}</span></span><span class="line"><span class="ln">24</span><span class="lc">outputs:</span></span><span class="line"><span class="ln">25</span><span class="lc">  - {name: plot, type: data, format: pdf, from_work_dir: boxplot.pdf}</span></span></code></pre><figcaption>Anatomy of a User-Defined Tool: typed inputs, a pinned container, and the R script itself in a `configfile` — safe to build and run. For the personal and the exploratory; curated tools stay the backbone.</figcaption></figure>
     </div>
   </section>
   <section class="slide slide--content" id="slide-6" aria-label="Slide 6">
-    <span class="slide__num">6 / 18</span>
+    <span class="slide__num">6 / 19</span>
     <h2 class="slide__title">…and the editor makes it safe and pleasant</h2>
     <div class="slide__blocks">
       <aside class="note note--info"><span class="note__title">Typed, in the browser</span><span>Monaco knows the inferred type of <code>inputs.*</code> from the tool’s schema — offering autocomplete, hover docs, and real TypeScript errors on the expressions, before anything runs.</span></aside>
@@ -64,28 +64,28 @@
     </div>
   </section>
   <section class="slide slide--content" id="slide-7" aria-label="Slide 7">
-    <span class="slide__num">7 / 18</span>
+    <span class="slide__num">7 / 19</span>
     <h2 class="slide__title">Why we built this — iterate against the real thing</h2>
     <div class="slide__body"><ul><li>Getting a tool (update) out is hard: write XML, build a container, open PR, wait for review<ul><li>necessary for community production tools, a lot of work to answer “is this even the tool I want?”</li></ul></li><li>User-defined tools turn that into an interactive loop, where your data is:<ul><li><strong>Is this even the tool I want?</strong> — try it, look at the output, change it</li><li><strong>Get the first shot right</strong> — a tight edit → run → inspect cycle</li><li><strong>Test against real resources</strong> — real datasets and real compute: GPUs, more memory, the cluster it’ll actually run on</li></ul></li><li>Humans need this, agents need it even more<ul><li>try → run → inspect → fix -&gt; repeat</li></ul></li></ul></div>
   </section>
   <section class="slide slide--content" id="slide-8" aria-label="Slide 8">
-    <span class="slide__num">8 / 18</span>
+    <span class="slide__num">8 / 19</span>
     <h2 class="slide__title">…and ask for the resources you need</h2>
     <div class="slide__blocks">
       <figure class="code"><pre class="language-yaml"><code><span class="line"><span class="ln">1</span><span class="lc">container: quay.io/biocontainers/foldseek:10.941cd33</span></span><span class="line hl"><span class="ln">2</span><span class="lc">requirements:</span></span><span class="line hl"><span class="ln">3</span><span class="lc">  - type: resource</span></span><span class="line hl"><span class="ln">4</span><span class="lc">    cores_min: 32</span></span><span class="line hl"><span class="ln">5</span><span class="lc">    ram_min: 8192            # MB</span></span><span class="line hl"><span class="ln">6</span><span class="lc">    gpu_memory_min: 1</span></span><span class="line hl"><span class="ln">7</span><span class="lc">    cuda_device_count_min: 0.5</span></span><span class="line hl"><span class="ln">8</span><span class="lc">    cuda_device_count_max: 1</span></span><span class="line"><span class="ln">9</span><span class="lc">shell_command: |</span></span><span class="line"><span class="ln">10</span><span class="lc">  foldseek easy-cluster &quot;$(inputs.seqs.path)&quot; out tmp \</span></span><span class="line"><span class="ln">11</span><span class="lc">    --gpu 1 --threads &quot;$GALAXY_SLOTS&quot;</span></span></code></pre><figcaption>A real GPU tool (Foldseek + ProstT5 structural clustering). The `resource` block feeds Total Perspective Vortex (TPV), which schedules the job onto a node that actually has the cores, memory, and GPU — so you prototype against the hardware you’ll really run on.</figcaption></figure>
     </div>
   </section>
   <section class="slide slide--section" id="slide-9" aria-label="Slide 9">
-    <span class="slide__num">9 / 18</span>
+    <span class="slide__num">9 / 19</span>
     <h2 class="slide__title">Your LLM code — made reproducible and trustworthy</h2>
   </section>
   <section class="slide slide--content" id="slide-10" aria-label="Slide 10">
-    <span class="slide__num">10 / 18</span>
+    <span class="slide__num">10 / 19</span>
     <h2 class="slide__title">LLMs write great throwaway code</h2>
     <div class="slide__body"><ul><li>Everyone (??) is generating analysis code with an LLM<ul><li>…a pandas snippet, an R plot, a one-off filter</li></ul></li><li>But the output is <strong>ephemeral</strong>: a chat message, a copied cell, hardcoded paths<ul><li>hard to re-run, hard to share, impossible to reproduce six months later</li></ul></li><li>A User-Defined Tool is the natural package for it<ul><li>structured inputs · typed parameters · a pinned container</li><li>→ a throwaway snippet becomes a recomputable, workflow-embeddable component</li></ul></li></ul></div>
   </section>
   <section class="slide slide--content" id="slide-11" aria-label="Slide 11">
-    <span class="slide__num">11 / 18</span>
+    <span class="slide__num">11 / 19</span>
     <h2 class="slide__title">So let’s not write it by hand</h2>
     <div class="slide__blocks">
       <aside class="note note--warn"><span class="note__title">Live demo</span><span>Taking off where the <em>Galaxy Live</em> demo ended — let’s plot the treatment groups. “Write a tool that uses ggplot2 to make a boxplot from a tabular file; the user picks a grouping column and a numeric column; put the R script in a configfile.”</span></aside>
@@ -93,21 +93,21 @@
     </div>
   </section>
   <section class="slide slide--content" id="slide-12" aria-label="Slide 12">
-    <span class="slide__num">12 / 18</span>
+    <span class="slide__num">12 / 19</span>
     <h2 class="slide__title">What just happened</h2>
     <div class="slide__body"><ul><li><strong>We described it</strong> in one sentence → GalaxyAI wrote the whole tool</li><li><strong>Type hint and linting  displayed in Tool Editor</strong> — generated code that doesn’t type-check never runs</li><li><strong>We ran it</strong> in a container, on real data</li><li>→ <strong>reproducible and trustworthy.</strong> Now: how do we share it?</li></ul></div>
   </section>
   <section class="slide slide--section" id="slide-13" aria-label="Slide 13">
-    <span class="slide__num">13 / 18</span>
+    <span class="slide__num">13 / 19</span>
     <h2 class="slide__title">From my tool to our tool</h2>
   </section>
   <section class="slide slide--content" id="slide-14" aria-label="Slide 14">
-    <span class="slide__num">14 / 18</span>
+    <span class="slide__num">14 / 19</span>
     <h2 class="slide__title">Good tools should converge, not multiply</h2>
     <div class="slide__body"><ul><li>Freedom to create has a failure mode: <strong>duplication</strong></li><li>Imagine 100 users each building their own slightly-different <code>bwa</code> wrapper<ul><li>none reviewed, tested, or annotated — and they all drift apart</li><li>reproducibility and trust quietly erode</li></ul></li><li>The fix isn’t to forbid personal tools — it’s to give the good ones a path to <strong>converge</strong></li></ul></div>
   </section>
   <section class="slide slide--content" id="slide-15" aria-label="Slide 15">
-    <span class="slide__num">15 / 18</span>
+    <span class="slide__num">15 / 19</span>
     <h2 class="slide__title">Sharing — what works today</h2>
     <div class="slide__blocks">
       <p class="prose">User-defined tools are <strong>private to their creator</strong>. But they are portable:</p>
@@ -116,7 +116,7 @@
     </div>
   </section>
   <section class="slide slide--content" id="slide-16" aria-label="Slide 16">
-    <span class="slide__num">16 / 18</span>
+    <span class="slide__num">16 / 19</span>
     <h2 class="slide__title">A graduated promotion path</h2>
     <div class="slide__blocks">
       <p class="prose">A tool should earn trust <em>and reach</em> incrementally, so good tools <strong>converge</strong> instead of duplicating:</p>
@@ -125,17 +125,25 @@
     </div>
   </section>
   <section class="slide slide--content" id="slide-17" aria-label="Slide 17">
-    <span class="slide__num">17 / 18</span>
+    <span class="slide__num">17 / 19</span>
     <h2 class="slide__title">Getting access — today and what’s next</h2>
     <div class="slide__body"><ul><li><strong>Access is administrator decision</strong> — UDTs are enabled per instance, then granted per user or role</li><li><strong>Closed for now</strong> — while the feature matures, ask us for access on the public instances</li><li><strong>Opening up soon</strong> — broader, more self-serve access is on the way</li><li><strong>Bring your own compute</strong> 🚧 — run UDTs on compute <em>you</em> bring, easing the resource and trust concerns that make some admins cautious</li></ul></div>
   </section>
   <section class="slide slide--closing" id="slide-18" aria-label="Slide 18">
-    <span class="slide__num">18 / 18</span>
+    <span class="slide__num">18 / 19</span>
     <h2 class="slide__title">Coming to a server near you soon!</h2>
     <div class="slide__blocks">
       <figure class="code"><pre class="language-yaml"><code><span class="line"><span class="ln">1</span><span class="lc">class: GalaxyUserTool</span></span><span class="line"><span class="ln">2</span><span class="lc">id: thank-you</span></span><span class="line"><span class="ln">3</span><span class="lc">version: &quot;1.0&quot;</span></span><span class="line"><span class="ln">4</span><span class="lc">name: Thank You!</span></span><span class="line"><span class="ln">5</span><span class="lc">description: Bring your own gratitude</span></span><span class="line"><span class="ln">6</span><span class="lc">container: busybox</span></span><span class="line"><span class="ln">7</span><span class="lc">shell_command: |</span></span><span class="line"><span class="ln">8</span><span class="lc">  echo &quot;Thank you to John Chilton, Dannon Baker, Michael Crusoe,</span></span><span class="line"><span class="ln">9</span><span class="lc">  Nicola Soranzo, Nate Coraor, Anton Nekrutenko,</span></span><span class="line"><span class="ln">10</span><span class="lc">  and the audience at GCC!&quot; &gt; thanks.txt</span></span><span class="line"><span class="ln">11</span><span class="lc">outputs:</span></span><span class="line"><span class="ln">12</span><span class="lc">  - name: output1</span></span><span class="line"><span class="ln">13</span><span class="lc">    type: data</span></span><span class="line"><span class="ln">14</span><span class="lc">    from_work_dir: thanks.txt</span></span></code></pre><figcaption>One last user-defined tool</figcaption></figure>
     </div>
     <div class="slide__meta"><p>Bring Your Own Tools!</p></div>
+  </section>
+  <section class="slide slide--content" id="slide-19" aria-label="Slide 19">
+    <span class="slide__num">19 / 19</span>
+    <h2 class="slide__title">SCI-SCALE CommV is hiring</h2>
+    <div class="slide__blocks">
+      <ul class="doc"><li>If you want to work on things like User-Defined Tools, Workflows, green compute, bring your own compute — let's talk.</li><li>Would consider <strong>moving to Belgium</strong>? Even better. <strong>Come speak to me.</strong></li></ul>
+      <aside class="note note--info"><span>Find me after the talk — or <code>marius@sci-scale.net</code></span></aside>
+    </div>
   </section>
 </main>
 <script>

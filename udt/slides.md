@@ -192,7 +192,7 @@ A tool should earn trust *and reach* incrementally, so good tools **converge** i
 3. **Project** — adopted into a **GitHub repo with CI and Tool Shed Publishing** (tests + lint on every change); reviewed and annotated — for a lab or community project
 4. **IUC → Tool Shed** — once it proves generally useful: promoted to the **IUC** and published on the **Tool Shed** as a curated, globally available tool
 
-> Each step adds review, testing, and reach — without the full toolshed overhead up front. Full proposal in `promotion-path.md`.
+> Each step adds review, testing, and reach — with limited overhead up front.
 
 ---
 
